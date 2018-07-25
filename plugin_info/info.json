@@ -1,0 +1,11 @@
+{
+	"id" : "piHole",
+	"name" : "piHole",
+	"description" : "Plugin pour activer/désactiver votre piHole",
+	"licence" : "AGPL",
+	"author" : "Nebz",
+	"require" : "3.0",
+	"category" : "monitoring",
+	"changelog" : "",
+	"documentation" : ""
+}
