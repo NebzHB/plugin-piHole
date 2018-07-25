@@ -1,11 +1,17 @@
 {
 	"id" : "piHole",
 	"name" : "piHole",
-	"description" : "Plugin pour activer/désactiver votre piHole",
+	"description" : "Plugin permettant d'activer ou désactiver votre serveur pi-Hole. Juste un interrupteur pour l'instant, laissez-moi savoir si vous avez besoin de plus (en fonction de ce que l'API permet)",
+	"usage" : "Récupérez l'apikey dans votre pi-Hole :<br />WEBPASSWORD dans /etc/pihole/setupVars.conf<br />ou<br />Settings &gt; API &gt; Show API token &gt; QRCode avec votre mobile, copier",
 	"licence" : "AGPL",
 	"author" : "Nebz",
+	"hasDependency" : false,
+	"hasOwnDeamon" : false,
 	"require" : "3.0",
 	"category" : "monitoring",
-	"changelog" : "",
-	"documentation" : ""
+	"issue" : "https://github.com/NebzHB/plugin-piHole/issues",
+	"changelog" : "https://nebzhb.github.io/plugin-piHole/#language#/changelog",
+	"documentation" : "https://nebzhb.github.io/plugin-piHole/#language#/",
+	"languages" : ["fr_FR"],
+	"compatibility" : ["miniplus","smart","rpi","docker","diy","mobile"],
 }
