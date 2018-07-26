@@ -13,5 +13,5 @@
 	"changelog" : "https://nebzhb.github.io/plugin-piHole/#language#/changelog",
 	"documentation" : "https://nebzhb.github.io/plugin-piHole/#language#/",
 	"languages" : ["fr_FR"],
-	"compatibility" : ["miniplus","smart","rpi","docker","diy","mobile"],
+	"compatibility" : ["miniplus","smart","rpi","docker","diy","mobile"]
 }
