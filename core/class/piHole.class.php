@@ -176,6 +176,7 @@ class piHole extends eqLogic {
 			$newCommand->setSubType('numeric');
 			$newCommand->setEqLogic_id($this->getId());
 			$newCommand->setDisplay('generic_type', 'GENERIC_INFO');
+			if(strpos($id,'percentage') !== false) $newCommand->setUnite( '%' );
 			$newCommand->save();		
 		
 		}
