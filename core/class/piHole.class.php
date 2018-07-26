@@ -32,16 +32,34 @@ class piHole extends eqLogic {
 		}
 	}
 	
+	public static function getStructure ($name) {
+	
+		switch($name) {
+			case "summaryRaw" :
+				return ["domains_being_blocked"=>"Domaines bloqués",
+						"dns_queries_today"=>"Requêtes aujourd'hui",
+						"ads_blocked_today"=>"Publicités bloquées aujourd'hui",
+						"ads_percentage_today"=>"Pourcentage publicités bloquées aujourd'hui",
+						"unique_domains"=>"Domaines uniques",
+						"queries_forwarded"=>"Requêtes transmises",
+						"queries_cached"=>"Requêtes en cache",
+						"clients_ever_seen"=>"Clients vus",
+						"unique_clients"=>"Clients uniques"
+					];
+			break;
+		}		
+	}
+	
 	public function getpiHoleInfo($data) {
 		try {
 			if(!$data) {
 				$ip = $this->getConfiguration('ip','');
 				$apikey = $this->getConfiguration('apikey','');
-				$urlprinter = 'http://' . $ip . '/admin/api.php?status&auth='.$apikey;
+				$urlprinter = 'http://' . $ip . '/admin/api.php?status&summaryRaw&auth='.$apikey;
 				$request_http = new com_http($urlprinter);
 				$piHoleinfo=$request_http->exec();
 			} else {
-				$piHoleinfo = $data;
+				$piHoleinfo=$data;
 			}
 
 			log::add('piHole','debug','recu:'.$piHoleinfo);
@@ -49,6 +67,22 @@ class piHole extends eqLogic {
 
 			$piHoleCmd = $this->getCmd(null, 'status');
 			$this->checkAndUpdateCmd($piHoleCmd, (($jsonpiHole['status']=='enabled')?1:0));
+			
+			if($data) {
+				$ip = $this->getConfiguration('ip','');
+				$apikey = $this->getConfiguration('apikey','');
+				$urlprinter = 'http://' . $ip . '/admin/api.php?summaryRaw&auth='.$apikey;
+				$request_http = new com_http($urlprinter);
+				$piHoleinfo=$request_http->exec();
+				log::add('piHole','debug','recu:'.$piHoleinfo);
+				$jsonpiHole = json_decode($piHoleinfo,true);
+			}
+			
+			$summaryRaw = piHole::getStructure('summaryRaw');
+			foreach($summaryRaw as $id => $trad) {
+				$piHoleCmd = $this->getCmd(null, $id);
+				$this->checkAndUpdateCmd($piHoleCmd, $jsonpiHole[$id]);
+			}
 			
 		} catch (Exception $e) {
 			$piHoleCmd = $this->getCmd(null, 'status');
@@ -63,12 +97,13 @@ class piHole extends eqLogic {
 	}
 	
 	public function postSave() {
+		$order=1;
 		$status = $this->getCmd(null, 'status');
 		if (!is_object($status)) {
 			$status = new piHolecmd();
 			$status->setLogicalId('status');
 			$status->setIsVisible(1);
-			$status->setOrder(1);
+			$status->setOrder($order);
 			$status->setName(__('Statut', __FILE__));
 		}
 		$status->setType('info');
@@ -77,13 +112,14 @@ class piHole extends eqLogic {
 		$status->setDisplay('generic_type', 'SWITCH_STATE');
 		$status->save();
 		
+		$order++;
 		$enable = $this->getCmd(null, 'enable');
 		if (!is_object($enable)) {
 			$enable = new piHolecmd();
 			$enable->setLogicalId('enable');
 			$enable->setDisplay('icon','<i class="fa fa-play"></i>');
 			$enable->setIsVisible(1);
-			$enable->setOrder(30);
+			$enable->setOrder($order);
 			$enable->setName(__('Activer le filtrage', __FILE__));
 		}
 		$enable->setType('action');
@@ -93,13 +129,14 @@ class piHole extends eqLogic {
 		$enable->setDisplay('generic_type', 'SWITCH_ON');
 		$enable->save();
 		
+		$order++;
 		$disable = $this->getCmd(null, 'disable');
 		if (!is_object($disable)) {
 			$disable = new piHolecmd();
 			$disable->setLogicalId('disable');
 			$disable->setDisplay('icon','<i class="fa fa-stop"></i>');
 			$disable->setIsVisible(1);
-			$disable->setOrder(32);
+			$disable->setOrder($order);
 			$disable->setName(__('Désactiver le filtrage', __FILE__));
 		}
 		$disable->setType('action');
@@ -109,17 +146,39 @@ class piHole extends eqLogic {
 		$disable->setDisplay('generic_type', 'SWITCH_OFF');
 		$disable->save();
 		
+		$order++;
 		$refresh = $this->getCmd(null, 'refresh');
 		if (!is_object($refresh)) {
 			$refresh = new piHolecmd();
 			$refresh->setLogicalId('refresh');
 			$refresh->setIsVisible(1);
+			$refresh->setOrder($order);
 			$refresh->setName(__('Rafraîchir', __FILE__));
 		}
 		$refresh->setType('action');
 		$refresh->setSubType('other');
 		$refresh->setEqLogic_id($this->getId());
 		$refresh->save();
+
+		$summaryRaw = piHole::getStructure('summaryRaw');
+		
+		foreach($summaryRaw as $id => $trad) {
+			$order++;
+			$newCommand = $this->getCmd(null, $id);
+			if (!is_object($newCommand)) {
+				$newCommand = new piHolecmd();
+				$newCommand->setLogicalId($id);
+				$newCommand->setIsVisible(0);
+				$newCommand->setOrder($order);
+				$newCommand->setName(__($trad, __FILE__));
+			}
+			$newCommand->setType('info');
+			$newCommand->setSubType('numeric');
+			$newCommand->setEqLogic_id($this->getId());
+			$newCommand->setDisplay('generic_type', 'GENERIC_INFO');
+			$newCommand->save();		
+		
+		}
 		
 		$this->getpiHoleInfo();
 	}
@@ -143,7 +202,7 @@ class piHoleCmd extends cmd {
 		$logical = $this->getLogicalId();
 		$result=null;
 		if ($logical != 'refresh'){
-			$urlpiHole = 'http://' . $ip . '/admin/api.php?summaryRaw';
+			$urlpiHole = 'http://' . $ip . '/admin/api.php?status&summaryRaw';
 			$request_http = new com_http($urlpiHole);
 			switch ($logical) {
 				case 'disable':
