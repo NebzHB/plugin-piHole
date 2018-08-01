@@ -12,6 +12,10 @@
 	"issue" : "https://github.com/NebzHB/plugin-piHole/issues",
 	"changelog" : "https://nebzhb.github.io/plugin-piHole/#language#/changelog",
 	"documentation" : "https://nebzhb.github.io/plugin-piHole/#language#/",
+	"forum_link" : "https://www.jeedom.com/forum/viewtopic.php?f=144&t=38861",
+	"link" : {
+		"forum":"https://www.jeedom.com/forum/viewtopic.php?f=144&t=38861"
+	},
 	"languages" : ["fr_FR","en_US"],
 	"compatibility" : ["miniplus","smart","rpi","docker","diy","mobile"]
 }
