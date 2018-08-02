@@ -172,6 +172,8 @@ class piHole extends eqLogic {
 				$newCommand->setOrder($order);
 				$newCommand->setName(__($trad, __FILE__));
 			}
+			$newCommand->setTemplate('dashboard', 'line');
+			$newCommand->setTemplate('mobile', 'line');
 			$newCommand->setType('info');
 			$newCommand->setSubType('numeric');
 			$newCommand->setEqLogic_id($this->getId());
