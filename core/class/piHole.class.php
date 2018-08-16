@@ -57,7 +57,7 @@ class piHole extends eqLogic {
 				$apikey = $this->getConfiguration('apikey','');
 				$urlprinter = 'http://' . $ip . '/admin/api.php?status&summaryRaw&auth='.$apikey;
 				$request_http = new com_http($urlprinter);
-				$piHoleinfo=$request_http->exec();
+				$piHoleinfo=$request_http->exec(60,1);
 			} else {
 				$piHoleinfo=$data;
 			}
@@ -73,7 +73,7 @@ class piHole extends eqLogic {
 				$apikey = $this->getConfiguration('apikey','');
 				$urlprinter = 'http://' . $ip . '/admin/api.php?summaryRaw&auth='.$apikey;
 				$request_http = new com_http($urlprinter);
-				$piHoleinfo=$request_http->exec();
+				$piHoleinfo=$request_http->exec(60,1);
 				log::add('piHole','debug','recu:'.$piHoleinfo);
 				$jsonpiHole = json_decode($piHoleinfo,true);
 			}
@@ -240,7 +240,7 @@ class piHoleCmd extends cmd {
 					$request_http = new com_http($urlpiHole);
 				break;
 			}
-			$result=$request_http->exec();
+			$result=$request_http->exec(60,1);
 			log::add('piHole','debug',$result);
 		}
 		$eqLogic->getpiHoleInfo($result);
