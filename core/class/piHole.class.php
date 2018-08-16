@@ -50,14 +50,14 @@ class piHole extends eqLogic {
 		}		
 	}
 	
-	public function getpiHoleInfo($data) {
+	public function getpiHoleInfo($data=null,$order=null) {
 		try {
 			if(!$data) {
 				$ip = $this->getConfiguration('ip','');
 				$apikey = $this->getConfiguration('apikey','');
 				$urlprinter = 'http://' . $ip . '/admin/api.php?status&summaryRaw&auth='.$apikey;
 				$request_http = new com_http($urlprinter);
-				$piHoleinfo=$request_http->exec();
+				$piHoleinfo=$request_http->exec(60,1);
 			} else {
 				$piHoleinfo=$data;
 			}
@@ -73,7 +73,7 @@ class piHole extends eqLogic {
 				$apikey = $this->getConfiguration('apikey','');
 				$urlprinter = 'http://' . $ip . '/admin/api.php?summaryRaw&auth='.$apikey;
 				$request_http = new com_http($urlprinter);
-				$piHoleinfo=$request_http->exec();
+				$piHoleinfo=$request_http->exec(60,1);
 				log::add('piHole','debug','recu:'.$piHoleinfo);
 				$jsonpiHole = json_decode($piHoleinfo,true);
 			}
@@ -82,6 +82,30 @@ class piHole extends eqLogic {
 			foreach($summaryRaw as $id => $trad) {
 				$piHoleCmd = $this->getCmd(null, $id);
 				$this->checkAndUpdateCmd($piHoleCmd, $jsonpiHole[$id]);
+			}
+			
+			if(isset($jsonpiHole['gravity_last_updated'])) { //v4
+				$nextOrder = $order || 29;
+				$gravity_last_updated = $this->getCmd(null, 'gravity_last_updated');
+				if (!is_object($gravity_last_updated)) { // create if not exists
+					$nextOrder++;
+					$gravity_last_updated = new piHolecmd();
+					$gravity_last_updated->setLogicalId('gravity_last_updated');
+					$gravity_last_updated->setIsVisible(0);
+					$gravity_last_updated->setOrder($nextOrder);
+					$gravity_last_updated->setName(__('Dernière mise à jour', __FILE__));
+				}
+				$gravity_last_updated->setType('info');
+				$gravity_last_updated->setSubType('string');
+				$gravity_last_updated->setEqLogic_id($this->getId());
+				$gravity_last_updated->setDisplay('generic_type', 'GENERIC_INFO');
+				$gravity_last_updated->save();
+				
+				$time=$jsonpiHole['gravity_last_updated']['absolute'];
+				$date= new DateTime("@$time");
+				$absolute = $date->format('d-m-Y H:i:s');
+				
+				$this->checkAndUpdateCmd($gravity_last_updated, $absolute);
 			}
 			
 		} catch (Exception $e) {
@@ -180,10 +204,9 @@ class piHole extends eqLogic {
 			$newCommand->setDisplay('generic_type', 'GENERIC_INFO');
 			if(strpos($id,'percentage') !== false) $newCommand->setUnite( '%' );
 			$newCommand->save();		
-		
 		}
 		
-		$this->getpiHoleInfo();
+		$this->getpiHoleInfo(null,$order);
 	}
 }
 
@@ -217,7 +240,7 @@ class piHoleCmd extends cmd {
 					$request_http = new com_http($urlpiHole);
 				break;
 			}
-			$result=$request_http->exec();
+			$result=$request_http->exec(60,1);
 			log::add('piHole','debug',$result);
 		}
 		$eqLogic->getpiHoleInfo($result);
