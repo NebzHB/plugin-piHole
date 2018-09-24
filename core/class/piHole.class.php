@@ -81,6 +81,7 @@ class piHole extends eqLogic {
 			$summaryRaw = piHole::getStructure('summaryRaw');
 			foreach($summaryRaw as $id => $trad) {
 				$piHoleCmd = $this->getCmd(null, $id);
+				if(strpos($id,'percentage') !== false) $jsonpiHole[$id]=round($jsonpiHole[$id],2);
 				$this->checkAndUpdateCmd($piHoleCmd, $jsonpiHole[$id]);
 			}
 			
