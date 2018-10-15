@@ -120,7 +120,7 @@ $eqLogics = eqLogic::byType('piHole');
 				<div class="form-group expertModeVisible">
 					<label class="col-sm-3 control-label">{{Auto-actualisation (cron)}}</label>
 					<div class="col-sm-3">
-						<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="autorefresh" placeholder="* * * * *"/>
+						<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="autorefresh" placeholder="*/5 * * * *"/>
 					</div>
 					<div class="col-sm-1">
 						<i class="fa fa-question-circle cursor floatright" id="bt_cronGenerator"></i>
