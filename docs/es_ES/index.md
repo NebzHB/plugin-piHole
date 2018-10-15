@@ -36,7 +36,7 @@ commandes.
 
 -   **Ip du serveur** : l'ip du serveur en question
 
--   **Apikey** : clé api global ou d'un user défini dans pi-hole lui même (WEBPASSWORD dans /etc/pihole/setupVars.conf ou Settings > API > Show API token > QRCode avec votre mobile, copier)
+-   **Apikey** : clé api global ou d'un user défini dans pi-hole lui même (WEBPASSWORD dans /etc/pihole/setupVars.conf ou Settings > API > Show API token > QRCode avec votre mobile, copier) Depuis piHole v4 elle est visible en RAW sous le QRCode.
 
 
 -   **Onglet Commandes** :

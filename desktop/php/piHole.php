@@ -105,18 +105,28 @@ $eqLogics = eqLogic::byType('piHole');
                         <label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isVisible" checked/>{{Visible}}</label>
                     </div>
                 </div>
-     <div class="form-group">
-      <label class="col-sm-3 control-label">{{Ip du serveur}}</label>
-      <div class="col-sm-6">
-        <input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="ip" placeholder="{{Ip du serveur piHole}}"/>
-      </div>
+				<div class="form-group">
+					  <label class="col-sm-3 control-label">{{Ip du serveur}}</label>
+					  <div class="col-sm-6">
+						<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="ip" placeholder="{{Ip du serveur piHole}}"/>
+					  </div>
                 </div>
-				  <div class="form-group">
-      <label class="col-sm-3 control-label">{{Apikey}}</label>
-      <div class="col-sm-6">
-        <input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="apikey" placeholder="{{Apikey de votre serveur}}"/>
-      </div>
-                </div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label">{{Apikey}}</label>
+					<div class="col-sm-6">
+						<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="apikey" placeholder="{{Apikey de votre serveur}}"/>
+					</div>
+				</div>
+				<div class="form-group expertModeVisible">
+					<label class="col-sm-3 control-label">{{Auto-actualisation (cron)}}</label>
+					<div class="col-sm-3">
+						<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="autorefresh" placeholder="*/5 * * * *"/>
+					</div>
+					<div class="col-sm-1">
+						<i class="fa fa-question-circle cursor floatright" id="bt_cronGenerator"></i>
+					</div>
+				</div>	  
+                
             </fieldset>
         </form>
 		</div>

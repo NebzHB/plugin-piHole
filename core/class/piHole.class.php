@@ -24,13 +24,19 @@ class piHole extends eqLogic {
 	public static function cron($_eqlogic_id = null) {
 		$eqLogics = ($_eqlogic_id !== null) ? array(eqLogic::byId($_eqlogic_id)) : eqLogic::byType('piHole', true);
 		foreach ($eqLogics as $piHole) {
-			try {
-				$piHole->getpiHoleInfo();
-			} catch (Exception $e) {
-
+			$autorefresh = $piHole->getConfiguration('autorefresh','*/5 * * * *');
+			if ($autorefresh != '') {
+				try {
+					$c = new Cron\CronExpression($autorefresh, new Cron\FieldFactory);
+					if ($c->isDue()) {
+						$piHole->getpiHoleInfo();
+					}
+				} catch (Exception $exc) {
+					log::add('piHole', 'error', __('Expression cron non valide pour ', __FILE__) . $piHole->getHumanName() . ' : ' . $autorefresh);
+				}
 			}
 		}
-	}
+	}	
 	
 	public static function getStructure ($name) {
 	
@@ -58,6 +64,7 @@ class piHole extends eqLogic {
 				$urlprinter = 'http://' . $ip . '/admin/api.php?status&summaryRaw&auth='.$apikey;
 				$request_http = new com_http($urlprinter);
 				$piHoleinfo=$request_http->exec(60,1);
+				log::add('piHole','debug','recu:'.$piHoleinfo);
 			} else {
 				$piHoleinfo=$data;
 			}
@@ -81,6 +88,7 @@ class piHole extends eqLogic {
 			$summaryRaw = piHole::getStructure('summaryRaw');
 			foreach($summaryRaw as $id => $trad) {
 				$piHoleCmd = $this->getCmd(null, $id);
+				if(strpos($id,'percentage') !== false) $jsonpiHole[$id]=round($jsonpiHole[$id],2);
 				$this->checkAndUpdateCmd($piHoleCmd, $jsonpiHole[$id]);
 			}
 			
@@ -108,10 +116,16 @@ class piHole extends eqLogic {
 				$this->checkAndUpdateCmd($gravity_last_updated, $absolute);
 			}
 			
+			$online = $this->getCmd(null, 'online');
+			if (is_object($online)) {
+				$this->checkAndUpdateCmd($online, '1');
+			}
 		} catch (Exception $e) {
-			$piHoleCmd = $this->getCmd(null, 'status');
-			if (is_object($piHoleCmd)) {
-				$this->checkAndUpdateCmd($piHoleCmd, 'Erreur communication');
+			if($e->getCode() == "404") {
+				$online = $this->getCmd(null, 'online');
+				if (is_object($online)) {
+					$this->checkAndUpdateCmd($online, '0');
+				}
 			}
 		}
 	} 
@@ -206,6 +220,20 @@ class piHole extends eqLogic {
 			$newCommand->save();		
 		}
 		
+		$online = $this->getCmd(null, 'online');
+		if (!is_object($online)) {
+			$online = new piHolecmd();
+			$online->setLogicalId('online');
+			$online->setIsVisible(1);
+			$online->setOrder($order);
+			$online->setName(__('Online', __FILE__));
+		}
+		$online->setType('info');
+		$online->setSubType('binary');
+		$online->setEqLogic_id($this->getId());
+		$online->setDisplay('generic_type', 'ONLINE');
+		$online->save();		
+		
 		$this->getpiHoleInfo(null,$order);
 	}
 }
@@ -217,7 +245,10 @@ class piHoleCmd extends cmd {
 	/*************************Methode static****************************/
 
 	/***********************Methode d'instance**************************/
-
+  	public function refresh() {
+		$this->execute();
+	    }
+	
 	public function execute($_options = null) {
 		if ($this->getType() == '') {
 			return '';
@@ -228,20 +259,32 @@ class piHoleCmd extends cmd {
 		$logical = $this->getLogicalId();
 		$result=null;
 		if ($logical != 'refresh'){
-			$urlpiHole = 'http://' . $ip . '/admin/api.php?status&summaryRaw';
-			$request_http = new com_http($urlpiHole);
+			$urlpiHole = 'http://' . $ip . '/admin/api.php?status&summaryRaw';	
 			switch ($logical) {
 				case 'disable':
 					$urlpiHole = 'http://' . $ip . '/admin/api.php?disable&auth='.$apikey;
-					$request_http = new com_http($urlpiHole);
 				break;
 				case 'enable':
 					$urlpiHole = 'http://' . $ip . '/admin/api.php?enable&auth='.$apikey;
-					$request_http = new com_http($urlpiHole);
 				break;
 			}
-			$result=$request_http->exec(60,1);
-			log::add('piHole','debug',$result);
+			try{
+				$request_http = new com_http($urlpiHole);
+				$result=$request_http->exec(60,1);
+				$online = $eqLogic->getCmd(null, 'online');
+				if (is_object($online)) {
+					$eqLogic->checkAndUpdateCmd($online, '1');
+				}
+			}
+			catch(Exception $e) {
+				if($e->getCode() == "404") {
+					$online = $eqLogic->getCmd(null, 'online');
+					if (is_object($online)) {
+						$eqLogic->checkAndUpdateCmd($online, '0');
+					}
+				}
+				log::add('piHole','debug','piHole non joignable : '.$e->getCode());
+			}
 		}
 		$eqLogic->getpiHoleInfo($result);
 	}
