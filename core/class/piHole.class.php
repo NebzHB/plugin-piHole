@@ -24,7 +24,7 @@ class piHole extends eqLogic {
 	public static function cron($_eqlogic_id = null) {
 		$eqLogics = ($_eqlogic_id !== null) ? array(eqLogic::byId($_eqlogic_id)) : eqLogic::byType('piHole', true);
 		foreach ($eqLogics as $piHole) {
-			$autorefresh = $piHole->getConfiguration('autorefresh','* * * * *');
+			$autorefresh = $piHole->getConfiguration('autorefresh','*/5 * * * *');
 			if ($autorefresh != '') {
 				try {
 					$c = new Cron\CronExpression($autorefresh, new Cron\FieldFactory);
