@@ -245,7 +245,10 @@ class piHoleCmd extends cmd {
 	/*************************Methode static****************************/
 
 	/***********************Methode d'instance**************************/
-
+  	public function refresh() {
+		$this->execute();
+	    }
+	
 	public function execute($_options = null) {
 		if ($this->getType() == '') {
 			return '';
