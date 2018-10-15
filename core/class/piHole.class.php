@@ -24,13 +24,19 @@ class piHole extends eqLogic {
 	public static function cron($_eqlogic_id = null) {
 		$eqLogics = ($_eqlogic_id !== null) ? array(eqLogic::byId($_eqlogic_id)) : eqLogic::byType('piHole', true);
 		foreach ($eqLogics as $piHole) {
-			try {
-				$piHole->getpiHoleInfo();
-			} catch (Exception $e) {
-
+			$autorefresh = $piHole->getConfiguration('autorefresh','* * * * *');
+			if ($autorefresh != '') {
+				try {
+					$c = new Cron\CronExpression($autorefresh, new Cron\FieldFactory);
+					if ($c->isDue()) {
+						$piHole->getpiHoleInfo();
+					}
+				} catch (Exception $exc) {
+					log::add('piHole', 'error', __('Expression cron non valide pour ', __FILE__) . $piHole->getHumanName() . ' : ' . $autorefresh);
+				}
 			}
 		}
-	}
+	}	
 	
 	public static function getStructure ($name) {
 	
