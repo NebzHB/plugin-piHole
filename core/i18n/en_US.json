@@ -8,7 +8,7 @@
         "Sauvegarder": "Save",
         "Supprimer": "Delete",
         "Configuration avancée": "Advanced configuration",
-        "Equipement": "Equipment",
+        "Equipement": "Device",
         "Commandes": "Commands",
         "Nom de l'équipement": "Device name",
         "Objet parent": "Parent object",
@@ -27,7 +27,7 @@
     "plugins\/piHole\/desktop\/js\/piHole.js": {
         "Santé piHole": "piHole Health",
         "Afficher": "Show",
-        "Historiser": "Logging",
+        "Historiser": "Historize",
         "Tester": "Test"
     },
     "plugins\/piHole\/desktop\/modal\/health.php": {
