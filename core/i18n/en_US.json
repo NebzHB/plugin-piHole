@@ -26,7 +26,7 @@
     },
     "plugins\/piHole\/desktop\/js\/piHole.js": {
         "Santé piHole": "piHole Health",
-        "Afficher": "Show",
+        "Afficher": "Display",
         "Historiser": "Historize",
         "Tester": "Test"
     },
