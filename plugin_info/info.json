@@ -7,7 +7,7 @@
 	"author" : "Nebz",
 	"hasDependency" : false,
 	"hasOwnDeamon" : false,
-	"require" : "3.0",
+	"require" : "3.3.24",
 	"category" : "monitoring",
 	"issue" : "https://github.com/NebzHB/plugin-piHole/issues",
 	"changelog" : "https://nebzhb.github.io/plugin-piHole/#language#/changelog",
