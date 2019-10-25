@@ -155,7 +155,7 @@ class piHole extends eqLogic {
 		if (!is_object($enable)) {
 			$enable = new piHolecmd();
 			$enable->setLogicalId('enable');
-			$enable->setDisplay('icon','<i class="fa fa-play"></i>');
+			$enable->setDisplay('icon','<i class="fas fa-play"></i>');
 			$enable->setIsVisible(1);
 			$enable->setOrder($order);
 			$enable->setName(__('Activer le filtrage', __FILE__));
@@ -172,7 +172,7 @@ class piHole extends eqLogic {
 		if (!is_object($disable)) {
 			$disable = new piHolecmd();
 			$disable->setLogicalId('disable');
-			$disable->setDisplay('icon','<i class="fa fa-stop"></i>');
+			$disable->setDisplay('icon','<i class="fas fa-stop"></i>');
 			$disable->setIsVisible(1);
 			$disable->setOrder($order);
 			$disable->setName(__('Désactiver le filtrage', __FILE__));
