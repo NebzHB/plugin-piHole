@@ -8,7 +8,7 @@ $eqLogics = eqLogic::byType('piHole');
 ?>
 <div class="row row-overflow">
   <div class="col-xs-12 eqLogicThumbnailDisplay">
-    <legend><i class="fa fa-cog"></i>  {{Gestion}}</legend>
+    <legend><i class="fas fa-cog"></i>  {{Gestion}}</legend>
     <div class="eqLogicThumbnailContainer">
       <div class="cursor eqLogicAction success" data-action="add">
         <i class="fas fa-plus-circle"></i>
@@ -21,12 +21,12 @@ $eqLogics = eqLogic::byType('piHole');
         <span>{{Configuration}}</span>
       </div>
       <div class="cursor" id="bt_healthpiHole">
-        <i class="fa fa-medkit"></i>
+        <i class="fas fa-medkit"></i>
         <br>
         <span>{{Santé}}</span>
       </div>
     </div>
-    <legend><i class="fa fa-table"></i>  {{Mes serveurs piHole}}</legend>
+    <legend><i class="fas fa-table"></i>  {{Mes serveurs piHole}}</legend>
     <div class="eqLogicThumbnailContainer">
       <?php
         foreach ($eqLogics as $eqLogic) {
@@ -43,16 +43,16 @@ $eqLogics = eqLogic::byType('piHole');
   <div class="col-xs-12 eqLogic" style="display: none;">
     <div class="input-group pull-right" style="display:inline-flex">
       <span class="input-group-btn">
-        <a class="btn btn-sm btn-default eqLogicAction roundedLeft" data-action="configure"><i class="fa fa-cogs"></i> {{Configuration avancée}}
-        </a><a class="btn btn-sm btn-success eqLogicAction" data-action="save"><i class="fa fa-check-circle"></i> {{Sauvegarder}}
-        </a><a class="btn btn-sm btn-danger eqLogicAction roundedRight" data-action="remove"><i class="fa fa-minus-circle"></i> {{Supprimer}}</a>
+        <a class="btn btn-sm btn-default eqLogicAction roundedLeft" data-action="configure"><i class="fas fa-cogs"></i> {{Configuration avancée}}
+        </a><a class="btn btn-sm btn-success eqLogicAction" data-action="save"><i class="fas fa-check-circle"></i> {{Sauvegarder}}
+        </a><a class="btn btn-sm btn-danger eqLogicAction roundedRight" data-action="remove"><i class="fas fa-minus-circle"></i> {{Supprimer}}</a>
       </span>
     </div>
 
   <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation"><a class="eqLogicAction cursor" aria-controls="home" role="tab" data-action="returnToThumbnailDisplay"><i class="fa fa-arrow-circle-left"></i></a></li>
-    <li role="presentation" class="active"><a href="#eqlogictab" aria-controls="home" role="tab" data-toggle="tab"><i class="fa fa-tachometer"></i> {{Equipement}}</a></li>
-    <li role="presentation"><a href="#commandtab" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-list-alt"></i> {{Commandes}}</a></li>
+    <li role="presentation"><a class="eqLogicAction cursor" aria-controls="home" role="tab" data-action="returnToThumbnailDisplay"><i class="fas fa-arrow-circle-left"></i></a></li>
+    <li role="presentation" class="active"><a href="#eqlogictab" aria-controls="home" role="tab" data-toggle="tab"><i class="fas fa-tachometer-alt"></i> {{Equipement}}</a></li>
+    <li role="presentation"><a href="#commandtab" aria-controls="profile" role="tab" data-toggle="tab"><i class="fas fa-list-alt"></i> {{Commandes}}</a></li>
   </ul>
 
   <div class="tab-content" style="height:calc(100% - 50px);overflow:auto;overflow-x: hidden;">
@@ -119,7 +119,7 @@ $eqLogics = eqLogic::byType('piHole');
                     <input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="autorefresh" placeholder="*/5 * * * *"/>
                   </div>
                   <div class="col-sm-1">
-                    <i class="fa fa-question-circle cursor floatright" id="bt_cronGenerator"></i>
+                    <i class="fas fa-question-circle cursor floatright" id="bt_cronGenerator"></i>
                   </div>
               </div>
             </fieldset>
@@ -136,7 +136,7 @@ $eqLogics = eqLogic::byType('piHole');
       </div>
     </div>
     <div role="tabpanel" class="tab-pane" id="commandtab">
-      <legend><i class="fa fa-list-alt"></i>  {{Tableau de commandes}}</legend>
+      <legend><i class="fas fa-list-alt"></i>  {{Tableau de commandes}}</legend>
       <table id="table_cmd" class="table table-bordered table-condensed">
         <thead>
           <tr>
