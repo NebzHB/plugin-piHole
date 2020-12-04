@@ -1,5 +1,9 @@
 Si rien n'est indiqué, il s'agit probablement d'une petite mise à jour pour la compatibilité Jeedom V4
 
+# 04-12-2020
+
+- ajout de trois commandes info binaires si des mises à jour sont à faire.
+
 # 25-10-2019
 
 - mise à jour design pour V4
