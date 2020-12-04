@@ -58,13 +58,14 @@ class piHole extends eqLogic {
 	
 	public function getpiHoleInfo($data=null,$order=null) {
 		try {
+			
+			$ip = $this->getConfiguration('ip','');
+			$apikey = $this->getConfiguration('apikey','');
+				
 			if(!$data) {
-				$ip = $this->getConfiguration('ip','');
-				$apikey = $this->getConfiguration('apikey','');
 				$urlprinter = 'http://' . $ip . '/admin/api.php?status&summaryRaw&auth='.$apikey;
 				$request_http = new com_http($urlprinter);
 				$piHoleinfo=$request_http->exec(60,1);
-				log::add('piHole','debug','recu:'.$piHoleinfo);
 			} else {
 				$piHoleinfo=$data;
 			}
@@ -76,8 +77,6 @@ class piHole extends eqLogic {
 			$this->checkAndUpdateCmd($piHoleCmd, (($jsonpiHole['status']=='enabled')?1:0));
 			
 			if($data) {
-				$ip = $this->getConfiguration('ip','');
-				$apikey = $this->getConfiguration('apikey','');
 				$urlprinter = 'http://' . $ip . '/admin/api.php?summaryRaw&auth='.$apikey;
 				$request_http = new com_http($urlprinter);
 				$piHoleinfo=$request_http->exec(60,1);
@@ -114,6 +113,20 @@ class piHole extends eqLogic {
 				$absolute = $date->format('d-m-Y H:i:s');
 				
 				$this->checkAndUpdateCmd($gravity_last_updated, $absolute);
+			}
+			
+			$urlprinter = 'http://' . $ip . '/admin/api.php?versions';
+			$request_http = new com_http($urlprinter);
+			$piHoleVer=$request_http->exec(60,1);
+			log::add('piHole','debug','recu versions:'.$piHoleVer);
+			if($piHoleVer) {
+				$jsonpiHoleVer = json_decode($piHoleVer,true);
+				$piHoleCmd = $this->getCmd(null, 'hasUpdatePiHole');
+				$this->checkAndUpdateCmd($piHoleCmd, (($jsonpiHoleVer['core_update']===true)?1:0));
+				$piHoleCmd = $this->getCmd(null, 'hasUpdateWebInterface');
+				$this->checkAndUpdateCmd($piHoleCmd, (($jsonpiHoleVer['web_update']===true)?1:0));
+				$piHoleCmd = $this->getCmd(null, 'hasUpdateFTL');
+				$this->checkAndUpdateCmd($piHoleCmd, (($jsonpiHoleVer['FTL_update']===true)?1:0));
 			}
 			
 			$online = $this->getCmd(null, 'online');
@@ -220,6 +233,7 @@ class piHole extends eqLogic {
 			$newCommand->save();		
 		}
 		
+		$order++;
 		$online = $this->getCmd(null, 'online');
 		if (!is_object($online)) {
 			$online = new piHolecmd();
@@ -232,8 +246,51 @@ class piHole extends eqLogic {
 		$online->setSubType('binary');
 		$online->setEqLogic_id($this->getId());
 		$online->setDisplay('generic_type', 'ONLINE');
-		$online->save();		
+		$online->save();	
+
+		$order++;
+		$hasUpdatePiHole = $this->getCmd(null, 'hasUpdatePiHole');
+		if (!is_object($hasUpdatePiHole)) {
+			$hasUpdatePiHole = new piHolecmd();
+			$hasUpdatePiHole->setLogicalId('hasUpdatePiHole');
+			$hasUpdatePiHole->setIsVisible(1);
+			$hasUpdatePiHole->setOrder($order);
+			$hasUpdatePiHole->setName(__('Update PiHole Dispo', __FILE__));
+		}
+		$hasUpdatePiHole->setType('info');
+		$hasUpdatePiHole->setSubType('binary');
+		$hasUpdatePiHole->setEqLogic_id($this->getId());
+		$hasUpdatePiHole->save();
 		
+		$order++;
+		$hasUpdateWebInterface = $this->getCmd(null, 'hasUpdateWebInterface');
+		if (!is_object($hasUpdateWebInterface)) {
+			$hasUpdateWebInterface = new piHolecmd();
+			$hasUpdateWebInterface->setLogicalId('hasUpdateWebInterface');
+			$hasUpdateWebInterface->setIsVisible(1);
+			$hasUpdateWebInterface->setOrder($order);
+			$hasUpdateWebInterface->setName(__('Update InterfaceWeb Dispo', __FILE__));
+		}
+		$hasUpdateWebInterface->setType('info');
+		$hasUpdateWebInterface->setSubType('binary');
+		$hasUpdateWebInterface->setEqLogic_id($this->getId());
+		$hasUpdateWebInterface->save();
+		
+		$order++;
+		$hasUpdateFTL = $this->getCmd(null, 'hasUpdateFTL');
+		if (!is_object($hasUpdateFTL)) {
+			$hasUpdateFTL = new piHolecmd();
+			$hasUpdateFTL->setLogicalId('hasUpdateFTL');
+			$hasUpdateFTL->setIsVisible(1);
+			$hasUpdateFTL->setOrder($order);
+			$hasUpdateFTL->setName(__('Update FTL Dispo', __FILE__));
+		}
+		$hasUpdateFTL->setType('info');
+		$hasUpdateFTL->setSubType('binary');
+		$hasUpdateFTL->setEqLogic_id($this->getId());
+		$hasUpdateFTL->save();
+		
+		$order++;
 		$this->getpiHoleInfo(null,$order);
 	}
 }
