@@ -66,7 +66,6 @@ class piHole extends eqLogic {
 				$urlprinter = 'http://' . $ip . '/admin/api.php?status&summaryRaw&auth='.$apikey;
 				$request_http = new com_http($urlprinter);
 				$piHoleinfo=$request_http->exec(60,1);
-				log::add('piHole','debug','recu:'.$piHoleinfo);
 			} else {
 				$piHoleinfo=$data;
 			}
