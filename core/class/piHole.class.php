@@ -27,7 +27,7 @@ class piHole extends eqLogic {
 			$autorefresh = $piHole->getConfiguration('autorefresh','*/5 * * * *');
 			if ($autorefresh != '') {
 				try {
-					$c = new Cron\CronExpression($autorefresh, new Cron\FieldFactory);
+					$c = new Cron\CronExpression(checkAndFixCron($autorefresh), new Cron\FieldFactory);
 					if ($c->isDue()) {
 						$piHole->getpiHoleInfo();
 					}
