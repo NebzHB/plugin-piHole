@@ -1,5 +1,10 @@
 Si rien n'est indiqué, il s'agit probablement d'une petite mise à jour pour la compatibilité Jeedom V4
 
+# 14-01-2021
+
+- checkAndFixCron pour corriger les éventuels cron utilisateurs mauvais
+- liste des pièces indentées
+
 # 04-12-2020
 
 - ajout de trois commandes info binaires si des mises à jour sont à faire.
