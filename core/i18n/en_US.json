@@ -19,6 +19,7 @@
         "Update FTL Dispo": "FTL Update Avail",
         "Update InterfaceWeb Dispo": "Web UI Update Avail",
         "Update PiHole Dispo": "piHole Update Avail",
+        "piHole non joignable :": "Cannot connect to piHole :",
         "recu version:": "received version:",
         "recu:": "received:"
     },
