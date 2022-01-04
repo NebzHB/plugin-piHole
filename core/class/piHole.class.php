@@ -340,7 +340,7 @@ class piHoleCmd extends cmd {
 						$eqLogic->checkAndUpdateCmd($online, '0');
 					}
 				}
-				log::add('piHole','debug',__('piHole non joignable : '), __FILE__).$e->getCode());
+				log::add('piHole','debug',__('piHole non joignable : ', __FILE__).$e->getCode());
 			}
 		}
 		$eqLogic->getpiHoleInfo($result);
