@@ -18,11 +18,15 @@
         "Statut": "Statut",
         "Update FTL Dispo": "Update FTL Dispo",
         "Update InterfaceWeb Dispo": "Update InterfaceWeb Dispo",
-        "Update PiHole Dispo": "Update PiHole Dispo"
+        "Update PiHole Dispo": "Update PiHole Dispo",
+        "piHole non joignable :": "piHole non joignable :",
+        "recu version:": "recu version:",
+        "recu:": "recu:"
     },
     "plugins\/piHole\/desktop\/js\/piHole.js": {
         "Afficher": "Afficher",
         "Historiser": "Historiser",
+        "Icone": "Icone",
         "Santé piHole": "Santé piHole",
         "Tester": "Tester"
     },
@@ -54,7 +58,6 @@
         "Nom de l'équipement": "Nom de l'équipement",
         "Objet parent": "Objet parent",
         "Options": "Options",
-        "Rechercher": "Rechercher",
         "Santé": "Santé",
         "Sauvegarder": "Sauvegarder",
         "Supprimer": "Supprimer",
