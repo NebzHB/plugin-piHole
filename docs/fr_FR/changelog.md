@@ -1,5 +1,9 @@
 Si rien n'est indiqué, il s'agit probablement d'une petite mise à jour pour la compatibilité Jeedom V4
 
+# en beta
+
+- traduction anglaise
+
 # 14-01-2021
 
 - checkAndFixCron pour corriger les éventuels cron utilisateurs mauvais
