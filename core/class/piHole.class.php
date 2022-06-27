@@ -65,7 +65,7 @@ class piHole extends eqLogic {
 			if(!$data) {
 				$urlprinter = $proto.'://' . $ip . '/admin/api.php?status&summaryRaw&auth='.$apikey;
 				$request_http = new com_http($urlprinter);
-				$request_http->setNoSslCheck(false);
+				$request_http->setNoSslCheck(true);
 				$piHoleinfo=$request_http->exec(60,1);
 			} else {
 				$piHoleinfo=$data;
@@ -80,7 +80,7 @@ class piHole extends eqLogic {
 			if($data) {
 				$urlprinter = $proto.'://' . $ip . '/admin/api.php?summaryRaw&auth='.$apikey;
 				$request_http = new com_http($urlprinter);
-				$request_http->setNoSslCheck(false);
+				$request_http->setNoSslCheck(true);
 				$piHoleinfo=$request_http->exec(60,1);
 				log::add('piHole','debug',__('recu:', __FILE__).$piHoleinfo);
 				$jsonpiHole = json_decode($piHoleinfo,true);
@@ -119,7 +119,7 @@ class piHole extends eqLogic {
 			
 			$urlprinter = $proto.'://' . $ip . '/admin/api.php?versions';
 			$request_http = new com_http($urlprinter);
-			$request_http->setNoSslCheck(false);
+			$request_http->setNoSslCheck(true);
 			$piHoleVer=$request_http->exec(60,1);
 			log::add('piHole','debug',__('recu version:', __FILE__).$piHoleVer);
 			if($piHoleVer) {
@@ -331,7 +331,7 @@ class piHoleCmd extends cmd {
 			}
 			try{
 				$request_http = new com_http($urlpiHole);
-				$request_http->setNoSslCheck(false);
+				$request_http->setNoSslCheck(true);
 				$result=$request_http->exec(60,1);
 				$online = $eqLogic->getCmd(null, 'online');
 				if (is_object($online)) {
