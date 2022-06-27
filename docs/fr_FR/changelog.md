@@ -3,6 +3,7 @@ Si rien n'est indiqué, il s'agit probablement d'une petite mise à jour pour la
 # en beta
 
 - traduction anglaise
+- protocol https ajouté
 
 # 14-01-2021
 
