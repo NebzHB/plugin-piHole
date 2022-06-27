@@ -103,8 +103,15 @@ $eqLogics = eqLogic::byType('piHole');
               </div>
               <div class="form-group">
                 <label class="col-sm-3 control-label">{{Ip du serveur}}</label>
-                <div class="col-sm-6">
-                  <input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="ip" placeholder="{{Ip du serveur piHole}}"/>
+                <div class="col-sm-4">
+				  <div class="input-group">
+				  <select class="eqLogicAttr form-control roundedLeft" data-l1key="configuration" data-l2key="proto">
+					<option value="http" selected>HTTP</option>
+					<option value="https">HTTPS</option>
+				  </select>
+				  <span class="input-group-addon">://</span>
+                  <input type="text" class="eqLogicAttr form-control roundedRight" data-l1key="configuration" data-l2key="ip" placeholder="{{Ip du serveur piHole}}"/>
+				  </div>
                 </div>
               </div>
               <div class="form-group">
@@ -115,7 +122,7 @@ $eqLogics = eqLogic::byType('piHole');
               </div>
               <div class="form-group expertModeVisible">
                 <label class="col-sm-3 control-label">{{Auto-actualisation (cron)}}</label>
-                  <div class="col-sm-3">
+                  <div class="col-sm-4">
                     <input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="autorefresh" placeholder="*/5 * * * *"/>
                   </div>
                   <div class="col-sm-1">
