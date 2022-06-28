@@ -42,15 +42,15 @@ class piHole extends eqLogic {
 	
 		switch($name) {
 			case "summaryRaw" :
-				return ["domains_being_blocked"=>"Domaines bloqués",
-						"dns_queries_today"=>"Requêtes aujourd'hui",
-						"ads_blocked_today"=>"Publicités bloquées aujourd'hui",
-						"ads_percentage_today"=>"Pourcentage publicités bloquées aujourd'hui",
-						"unique_domains"=>"Domaines uniques",
-						"queries_forwarded"=>"Requêtes transmises",
-						"queries_cached"=>"Requêtes en cache",
-						"clients_ever_seen"=>"Clients vus",
-						"unique_clients"=>"Clients uniques"
+				return ["domains_being_blocked"=>__("Domaines bloqués", __FILE__),
+						"dns_queries_today"=>__("Requêtes aujourd'hui", __FILE__),
+						"ads_blocked_today"=>__("Publicités bloquées aujourd'hui", __FILE__),
+						"ads_percentage_today"=>__("Pourcentage publicités bloquées aujourd'hui", __FILE__),
+						"unique_domains"=>__("Domaines uniques", __FILE__),
+						"queries_forwarded"=>__("Requêtes transmises", __FILE__),
+						"queries_cached"=>__("Requêtes en cache", __FILE__),
+						"clients_ever_seen"=>__("Clients vus", __FILE__),
+						"unique_clients"=>__("Clients uniques", __FILE__)
 					];
 			break;
 		}		
@@ -58,29 +58,31 @@ class piHole extends eqLogic {
 	
 	public function getpiHoleInfo($data=null,$order=null) {
 		try {
-			
+			$proto = $this->getConfiguration('proto','http');
 			$ip = $this->getConfiguration('ip','');
 			$apikey = $this->getConfiguration('apikey','');
 				
 			if(!$data) {
-				$urlprinter = 'http://' . $ip . '/admin/api.php?status&summaryRaw&auth='.$apikey;
+				$urlprinter = $proto.'://' . $ip . '/admin/api.php?status&summaryRaw&auth='.$apikey;
 				$request_http = new com_http($urlprinter);
+				$request_http->setNoSslCheck(true);
 				$piHoleinfo=$request_http->exec(60,1);
 			} else {
 				$piHoleinfo=$data;
 			}
 
-			log::add('piHole','debug','recu:'.$piHoleinfo);
+			log::add('piHole','debug',__('recu:', __FILE__).$piHoleinfo);
 			$jsonpiHole = json_decode($piHoleinfo,true);
 
 			$piHoleCmd = $this->getCmd(null, 'status');
 			$this->checkAndUpdateCmd($piHoleCmd, (($jsonpiHole['status']=='enabled')?1:0));
 			
 			if($data) {
-				$urlprinter = 'http://' . $ip . '/admin/api.php?summaryRaw&auth='.$apikey;
+				$urlprinter = $proto.'://' . $ip . '/admin/api.php?summaryRaw&auth='.$apikey;
 				$request_http = new com_http($urlprinter);
+				$request_http->setNoSslCheck(true);
 				$piHoleinfo=$request_http->exec(60,1);
-				log::add('piHole','debug','recu:'.$piHoleinfo);
+				log::add('piHole','debug',__('recu:', __FILE__).$piHoleinfo);
 				$jsonpiHole = json_decode($piHoleinfo,true);
 			}
 			
@@ -115,10 +117,11 @@ class piHole extends eqLogic {
 				$this->checkAndUpdateCmd($gravity_last_updated, $absolute);
 			}
 			
-			$urlprinter = 'http://' . $ip . '/admin/api.php?versions';
+			$urlprinter = $proto.'://' . $ip . '/admin/api.php?versions';
 			$request_http = new com_http($urlprinter);
+			$request_http->setNoSslCheck(true);
 			$piHoleVer=$request_http->exec(60,1);
-			log::add('piHole','debug','recu versions:'.$piHoleVer);
+			log::add('piHole','debug',__('recu version:', __FILE__).$piHoleVer);
 			if($piHoleVer) {
 				$jsonpiHoleVer = json_decode($piHoleVer,true);
 				$piHoleCmd = $this->getCmd(null, 'hasUpdatePiHole');
@@ -221,7 +224,7 @@ class piHole extends eqLogic {
 				$newCommand->setLogicalId($id);
 				$newCommand->setIsVisible(0);
 				$newCommand->setOrder($order);
-				$newCommand->setName(__($trad, __FILE__));
+				$newCommand->setName($trad);
 			}
 			$newCommand->setTemplate('dashboard', 'line');
 			$newCommand->setTemplate('mobile', 'line');
@@ -311,22 +314,24 @@ class piHoleCmd extends cmd {
 			return '';
 		}
 		$eqLogic = $this->getEqlogic();
+		$proto = $eqLogic->getConfiguration('proto','http');
 		$ip = $eqLogic->getConfiguration('ip','');
 		$apikey = $eqLogic->getConfiguration('apikey','');
 		$logical = $this->getLogicalId();
 		$result=null;
 		if ($logical != 'refresh'){
-			$urlpiHole = 'http://' . $ip . '/admin/api.php?status&summaryRaw';	
+			$urlpiHole = $proto.'://' . $ip . '/admin/api.php?status&summaryRaw';	
 			switch ($logical) {
 				case 'disable':
-					$urlpiHole = 'http://' . $ip . '/admin/api.php?disable&auth='.$apikey;
+					$urlpiHole = $proto.'://' . $ip . '/admin/api.php?disable&auth='.$apikey;
 				break;
 				case 'enable':
-					$urlpiHole = 'http://' . $ip . '/admin/api.php?enable&auth='.$apikey;
+					$urlpiHole = $proto.'://' . $ip . '/admin/api.php?enable&auth='.$apikey;
 				break;
 			}
 			try{
 				$request_http = new com_http($urlpiHole);
+				$request_http->setNoSslCheck(true);
 				$result=$request_http->exec(60,1);
 				$online = $eqLogic->getCmd(null, 'online');
 				if (is_object($online)) {
@@ -340,7 +345,7 @@ class piHoleCmd extends cmd {
 						$eqLogic->checkAndUpdateCmd($online, '0');
 					}
 				}
-				log::add('piHole','debug','piHole non joignable : '.$e->getCode());
+				log::add('piHole','debug',__('piHole non joignable : ', __FILE__).$e->getCode());
 			}
 		}
 		$eqLogic->getpiHoleInfo($result);

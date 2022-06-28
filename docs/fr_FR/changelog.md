@@ -1,5 +1,10 @@
 Si rien n'est indiqué, il s'agit probablement d'une petite mise à jour pour la compatibilité Jeedom V4
 
+# 28-06-2022
+
+- traduction anglaise
+- protocol https ajouté
+
 # 14-01-2021
 
 - checkAndFixCron pour corriger les éventuels cron utilisateurs mauvais
