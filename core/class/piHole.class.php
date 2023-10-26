@@ -333,6 +333,7 @@ class piHoleCmd extends cmd {
 				$request_http = new com_http($urlpiHole);
 				$request_http->setNoSslCheck(true);
 				$result=$request_http->exec(60,1);
+				log::add('piHole','debug','Result cmd '.$urlpiHole.' :'.$result);
 				$online = $eqLogic->getCmd(null, 'online');
 				if (is_object($online)) {
 					$eqLogic->checkAndUpdateCmd($online, '1');
