@@ -1,21 +1,38 @@
 {
-	"id" : "piHole",
-	"name" : "piHole",
-	"description" : "Plugin permettant d'activer ou désactiver votre serveur pi-Hole. Un interrupteur pour le désactiver et quelques chiffres, laissez-moi savoir si vous avez besoin de plus (en fonction de ce que l'API permet)",
-	"utilization" : "Récupérez l'apikey dans votre pi-Hole :<br />WEBPASSWORD dans /etc/pihole/setupVars.conf<br />ou<br />Settings &gt; API &gt; Show API token &gt; QRCode avec votre mobile, copier",
-	"licence" : "AGPL",
-	"author" : "Nebz",
-	"hasDependency" : false,
-	"hasOwnDeamon" : false,
-	"require" : "3.3.24",
-	"category" : "monitoring",
-	"issue" : "https://github.com/NebzHB/plugin-piHole/issues",
-	"changelog" : "https://nebzhb.github.io/plugin-piHole/fr_FR/changelog",
-	"documentation" : "https://nebzhb.github.io/plugin-piHole/fr_FR/",
-	"forum_link" : "https://community.jeedom.com/tag/plugin-pihole",
-	"link" : {
-		"forum":"https://community.jeedom.com/tag/plugin-pihole"
+	"id": "piHole",
+	"name": "piHole",
+	"description": "Plugin permettant d'activer ou désactiver votre serveur pi-Hole. Un interrupteur pour le désactiver et quelques chiffres, laissez-moi savoir si vous avez besoin de plus (en fonction de ce que l'API permet)",
+	"utilization": "Récupérez l'apikey dans votre pi-Hole :<br />WEBPASSWORD dans /etc/pihole/setupVars.conf<br />ou<br />Settings &gt; API &gt; Show API token &gt; QRCode avec votre mobile, copier",
+	"licence": "AGPL",
+	"author": "Nebz",
+	"hasDependency": false,
+	"hasOwnDeamon": false,
+	"require": "3.3.24",
+	"category": "monitoring",
+	"issue": "https://github.com/NebzHB/plugin-piHole/issues",
+	"changelog": "https://nebzhb.github.io/plugin-piHole/fr_FR/changelog",
+	"changelog_beta": "https://nebzhb.github.io/plugin-piHole/fr_FR/changelog",
+	"documentation": "https://nebzhb.github.io/plugin-piHole/fr_FR/",
+	"documentation_beta": "https://nebzhb.github.io/plugin-piHole/fr_FR/",
+	"forum_link": "https://community.jeedom.com/tag/plugin-pihole",
+	"link": {
+		"forum": "https://community.jeedom.com/tag/plugin-pihole"
 	},
-	"languages" : ["fr_FR","en_US"],
-	"compatibility" : ["miniplus","smart","rpi","docker","diy","mobile","v4"]
+	"language": [
+		"de_DE",
+		"en_US",
+		"es_ES",
+		"fr_FR",
+		"it_IT",
+		"pt_PT"
+	],
+	"compatibility": [
+		"miniplus",
+		"smart",
+		"rpi",
+		"docker",
+		"diy",
+		"mobile",
+		"v4"
+	]
 }

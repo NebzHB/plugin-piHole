@@ -1,5 +1,9 @@
 Si rien n'est indiqué, il s'agit probablement d'une petite mise à jour pour la compatibilité Jeedom V4
 
+# 12-08-2024
+- Traductions et mise à jour des traductions en Anglais, Allemand, Espagnol, Italien, Portugais
+- Ajout de logs
+ 
 # 28-06-2022
 
 - traduction anglaise
