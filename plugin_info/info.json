@@ -18,6 +18,6 @@
 	"link" : {
 		"forum":"https://community.jeedom.com/tag/plugin-pihole"
 	},
-	"languages" : ["fr_FR","en_US"],
+	"language" : ["fr_FR","en_US"],
 	"compatibility" : ["miniplus","smart","rpi","docker","diy","mobile","v4"]
 }
