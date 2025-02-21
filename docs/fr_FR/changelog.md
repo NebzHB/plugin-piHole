@@ -2,10 +2,14 @@ Si rien n'est indiqué, il s'agit probablement d'une petite mise à jour pour la
 
 # Changelog
 
+## 21-02-2025
+- Aucune modification dans le plugin
+- Modification des workflows github
+
 ## 12-08-2024
 - Traductions et mise à jour des traductions en Anglais, Allemand, Espagnol, Italien, Portugais
 - Ajout de logs
- 
+
 ## 28-06-2022
 
 - traduction anglaise
