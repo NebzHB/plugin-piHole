@@ -81,7 +81,7 @@ class piHole extends eqLogic {
 			if (!is_array($jsonpiHole) || !isset($jsonpiHole['session']['sid'])) {
 				throw new Exception("JSON received from $urlAuth is invalid");
 			}
-			$sid=urlencode($jsonpiHole['session']['sid']);
+			$sid=$jsonpiHole['session']['sid'];
 			$this->setConfiguration('sid',$sid);
 			$this->save(true);
 			return $sid;
