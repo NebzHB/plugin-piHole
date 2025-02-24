@@ -41,7 +41,7 @@ class piHole extends eqLogic {
 	public static function getStructure ($name) {
 	
 		switch($name) {
-			case "summaryRaw" :
+			case "summary" :
 				return ["domains_being_blocked"=>__("Domaines bloqués", __FILE__),
 						"dns_queries_today"=>__("Requêtes aujourd'hui", __FILE__),
 						"ads_blocked_today"=>__("Publicités bloquées aujourd'hui", __FILE__),
@@ -52,6 +52,24 @@ class piHole extends eqLogic {
 						"clients_ever_seen"=>__("Clients vus", __FILE__),
 						"unique_clients"=>__("Clients uniques", __FILE__)
 					];
+			break;
+			case "newStruct":
+				return [	"queries"=>[
+							"dns_queries_today"=>["key"=>"total","trad"=>__("Requêtes aujourd'hui", __FILE__)],
+							"ads_blocked_today"=>["key"=>"blocked","trad"=>__("Publicités bloquées aujourd'hui", __FILE__)],
+							"ads_percentage_today"=>["key"=>"percent_blocked","trad"=>__("Pourcentage publicités bloquées aujourd'hui", __FILE__)],
+							"unique_domains"=>["key"=>"unique_domains","trad"=>]__("Domaines uniques", __FILE__),
+							"queries_forwarded"=>["key"=>"forwarded","trad"=>__("Requêtes transmises", __FILE__)],
+							"queries_cached"=>["key"=>"cached","trad"=>__("Requêtes en cache", __FILE__)]
+						],
+						"clients"=>[	
+							"clients_ever_seen"=>["key"=>"total","trad"=>__("Clients vus", __FILE__)],
+							"unique_clients"=>["key"=>"active","trad"=>__("Clients uniques", __FILE__)]
+						],
+						"gravity"=>[
+							"domains_being_blocked"=>["key"=>"domains_being_blocked","trad"=>__("Domaines bloqués", __FILE__)],
+							"gravity_last_updated"=>["key"=>"last_update","trad"=>__('Dernière mise à jour', __FILE__)]
+						]
 			break;
 		}		
 	}
@@ -113,58 +131,43 @@ class piHole extends eqLogic {
 			$apikey = $this->getConfiguration('apikey','');
 			$sid = $this->piHoleAuth($proto,$ip,$apikey);
 				
-
-			$urlprinter = $proto.'://' . $ip . '/api/dns/blocking';
-			$request_http = new com_http($urlprinter);
+			$urlBlocking = $proto.'://' . $ip . '/api/dns/blocking';
+			$request_http = new com_http($urlBlocking);
 			$request_http->setNoSslCheck(true);
 			if($sid) {$request_http->setHeader(["sid: $sid"]);}
 			$piHoleinfo=$request_http->exec(60,1);
-			log::add('piHole','debug',__('request:', __FILE__).$urlprinter.json_encode(["sid: $sid"]));
-
-
-			log::add('piHole','debug',__('recu:', __FILE__).$piHoleinfo);
+			log::add('piHole','debug',"Request: ".$urlBlocking.' with header '.json_encode(["sid: $sid"]));
+			log::add('piHole','debug',"Response: ".$piHoleinfo);
 			$jsonpiHole = json_decode($piHoleinfo,true);
 
 			$piHoleCmd = $this->getCmd(null, 'status');
 			$this->checkAndUpdateCmd($piHoleCmd, (($jsonpiHole['blocking']=='enabled')?1:0));
 			
-			$urlprinter = $proto.'://' . $ip . '/api/stats/summary';
-			$request_http = new com_http($urlprinter);
+			$urlSummary = $proto.'://' . $ip . '/api/stats/summary';
+			$request_http = new com_http($urlSummary);
 			$request_http->setNoSslCheck(true);
 			if($sid) {$request_http->setHeader(["sid: $sid"]);}
 			$piHoleinfo=$request_http->exec(60,1);
-			log::add('piHole','debug',__('recu:', __FILE__).$piHoleinfo);
+			log::add('piHole','debug',"Request Summary: ".$urlSummary.' with header '.json_encode(["sid: $sid"]));
+			log::add('piHole','debug',"Response Summary: ".$piHoleinfo);
 			$jsonpiHole = json_decode($piHoleinfo,true);
 			
-			$summaryRaw = piHole::getStructure('summaryRaw');
-			foreach($summaryRaw as $id => $trad) {
-				$piHoleCmd = $this->getCmd(null, $id);
-				if(strpos($id,'percentage') !== false) $jsonpiHole[$id]=round($jsonpiHole[$id],2);
-				$this->checkAndUpdateCmd($piHoleCmd, $jsonpiHole[$id]);
-			}
-			
-			if(isset($jsonpiHole['gravity_last_updated'])) { //v4
-				$nextOrder = $order || 29;
-				$gravity_last_updated = $this->getCmd(null, 'gravity_last_updated');
-				if (!is_object($gravity_last_updated)) { // create if not exists
-					$nextOrder++;
-					$gravity_last_updated = new piHolecmd();
-					$gravity_last_updated->setLogicalId('gravity_last_updated');
-					$gravity_last_updated->setIsVisible(0);
-					$gravity_last_updated->setOrder($nextOrder);
-					$gravity_last_updated->setName(__('Dernière mise à jour', __FILE__));
+			$summary = piHole::getStructure('newStruct');
+
+			foreach($summary as $keySummary => $obj) {
+				foreach($obj as $id => $objContent) {
+					$keyValue = $objContent['key'];
+					$piHoleCmd = $this->getCmd(null, $id);
+					if(is_object($piHoleCmd)) {
+						if(strpos($id,'percentage') !== false) $jsonpiHole[$keySummary][$keyValue]=round($jsonpiHole[$keySummary][$keyValue],2);
+						if(strpos($id,'gravity_last_updated') !== false) {
+							$time=$jsonpiHole[$keySummary][$keyValue];
+							$date=new DateTime("@$time");
+							$jsonpiHole[$keySummary][$keyValue] = $date->format('d-m-Y H:i:s');
+						}
+						$this->checkAndUpdateCmd($piHoleCmd, $jsonpiHole[$keySummary][$keyValue]);
+					}
 				}
-				$gravity_last_updated->setType('info');
-				$gravity_last_updated->setSubType('string');
-				$gravity_last_updated->setEqLogic_id($this->getId());
-				$gravity_last_updated->setDisplay('generic_type', 'GENERIC_INFO');
-				$gravity_last_updated->save();
-				
-				$time=$jsonpiHole['gravity_last_updated']['absolute'];
-				$date= new DateTime("@$time");
-				$absolute = $date->format('d-m-Y H:i:s');
-				
-				$this->checkAndUpdateCmd($gravity_last_updated, $absolute);
 			}
 			
 			$urlprinter = $proto.'://' . $ip . '/api/info/version';
@@ -266,26 +269,32 @@ class piHole extends eqLogic {
 		$refresh->setEqLogic_id($this->getId());
 		$refresh->save();
 
-		$summaryRaw = piHole::getStructure('summaryRaw');
-		
-		foreach($summaryRaw as $id => $trad) {
-			$order++;
-			$newCommand = $this->getCmd(null, $id);
-			if (!is_object($newCommand)) {
-				$newCommand = new piHolecmd();
-				$newCommand->setLogicalId($id);
-				$newCommand->setIsVisible(0);
-				$newCommand->setOrder($order);
-				$newCommand->setName($trad);
+		$summary = piHole::getStructure('newStruct');
+
+		foreach($summary as $keySummary => $obj) {
+			foreach($obj as $id => $objContent) {
+				$order++;
+				$newCommand = $this->getCmd(null, $id);
+				if(!is_object($newCommand)) {
+					$newCommand = new piHolecmd();
+					$newCommand->setLogicalId($id);
+					$newCommand->setIsVisible(0);
+					$newCommand->setOrder($order);
+					$newCommand->setName($objContent['trad']);
+				}
+				$newCommand->setTemplate('dashboard', 'line');
+				$newCommand->setTemplate('mobile', 'line');
+				$newCommand->setType('info');
+				if($id == 'gravity_last_updated') {
+					$newCommand->setSubType('string');
+				} else {
+					$newCommand->setSubType('numeric');
+				}
+				$newCommand->setEqLogic_id($this->getId());
+				$newCommand->setDisplay('generic_type', 'GENERIC_INFO');
+				if($id == 'ads_percentage_today') $newCommand->setUnite( '%' );
+				$newCommand->save();
 			}
-			$newCommand->setTemplate('dashboard', 'line');
-			$newCommand->setTemplate('mobile', 'line');
-			$newCommand->setType('info');
-			$newCommand->setSubType('numeric');
-			$newCommand->setEqLogic_id($this->getId());
-			$newCommand->setDisplay('generic_type', 'GENERIC_INFO');
-			if(strpos($id,'percentage') !== false) $newCommand->setUnite( '%' );
-			$newCommand->save();		
 		}
 		
 		$order++;
@@ -345,8 +354,7 @@ class piHole extends eqLogic {
 		$hasUpdateFTL->setEqLogic_id($this->getId());
 		$hasUpdateFTL->save();
 		
-		$order++;
-		$this->getpiHoleInfo($order);
+		$this->getpiHoleInfo();
 	}
 }
 
