@@ -57,49 +57,55 @@ class piHole extends eqLogic {
 	}
 
 	public function piHoleAuth($proto,$ip,$apikey) {
+		$sid=$this->getConfiguration('sid',null);
+		
 		// check auth
 		$urlAuth = $proto.'://' . $ip . '/api/auth';
 		$request_http = new com_http($urlAuth);
 		$request_http->setNoSslCheck(true);
+		if($sid) {$request_http->setHeader(["sid: $sid"]);}
 		$piHoleAuth=$request_http->exec(60,1);
 		log::add('piHole','debug',"CHECK AUTH:".$piHoleAuth);
 		if(!$piHoleAuth) {
 			throw new Exception("Cannot find $urlAuth for checking authentication status");
 		}
 		$jsonpiHole = json_decode($piHoleAuth,true);
-		if(!is_array($jsonpiHole)) {
-			if(!isset($jsonpiHole['session']['valid']) || !$jsonpiHole['session']['valid']) {
+		if(is_array($jsonpiHole)) {
+			if(!isset($jsonpiHole['session']['valid']) || $jsonpiHole['session']['valid']==false) {
 				//get sid
 				$request_http = new com_http($urlAuth);
 				$request_http->setNoSslCheck(true);
 				$request_http->setPost(json_encode(["password"=>$apikey]));
 				$piHoleAuth=$request_http->exec(60,1);
+				log::add('piHole','debug',"AUTH:".$piHoleAuth." with ".json_encode(["password"=>$apikey]));
 				if(!$piHoleAuth) {
 					throw new Exception("Cannot find $urlAuth for authentication");
 				}
-				log::add('piHole','debug',"AUTH:".$piHoleAuth);
 				$jsonpiHole = json_decode($piHoleAuth,true);
 				if (!is_array($jsonpiHole) || !isset($jsonpiHole['session']['sid'])) {
 					throw new Exception("JSON received from $urlAuth is invalid");
 				}
+				log::add('piHole','debug',"AUTH OK SID:".$sid);
 				$sid=$jsonpiHole['session']['sid'];
 				$this->setConfiguration('sid',$sid);
 				$this->save(true);
 				return $sid;
 			} else{
 				if($jsonpiHole['session']['sid'] != null) {
-					$sid=$this->getConfiguration('sid','');
-					log::add('piHole','debug',"session valid taking sid from cache:".$sid);
+					log::add('piHole','debug',"Session valid taking sid from cache:".$sid);
 					return $sid;
 				} else {
-					$this->setConfiguration('sid','');
-					return $this->piHoleAuth($proto,$ip,$apikey);
+					log::add('piHole','debug',"Session valid no sid");
+					$this->setConfiguration('sid',null);
+					return null;
 				}
 			}
+		} else {
+			throw new Exception("CHECK AUTH JSON received from $urlAuth is invalid");
 		}
 	}
 	
-	public function getpiHoleInfo($data=null,$order=null) {
+	public function getpiHoleInfo($order=null) {
 		if(!$this->getIsEnable()) return;
 		try {
 			$proto = $this->getConfiguration('proto','http');
@@ -107,16 +113,14 @@ class piHole extends eqLogic {
 			$apikey = $this->getConfiguration('apikey','');
 			$sid = $this->piHoleAuth($proto,$ip,$apikey);
 				
-			if(!$data) {
-				$urlprinter = $proto.'://' . $ip . '/api/dns/blocking';
-				$request_http = new com_http($urlprinter);
-				$request_http->setNoSslCheck(true);
-				if($sid) {$request_http->setHeader(["sid: $sid"]);}
-				$piHoleinfo=$request_http->exec(60,1);
-				log::add('piHole','debug',__('request:', __FILE__).$urlprinter.json_encode(["sid: $sid"]));
-			} else {
-				$piHoleinfo=$data;
-			}
+
+			$urlprinter = $proto.'://' . $ip . '/api/dns/blocking';
+			$request_http = new com_http($urlprinter);
+			$request_http->setNoSslCheck(true);
+			if($sid) {$request_http->setHeader(["sid: $sid"]);}
+			$piHoleinfo=$request_http->exec(60,1);
+			log::add('piHole','debug',__('request:', __FILE__).$urlprinter.json_encode(["sid: $sid"]));
+
 
 			log::add('piHole','debug',__('recu:', __FILE__).$piHoleinfo);
 			$jsonpiHole = json_decode($piHoleinfo,true);
@@ -124,15 +128,13 @@ class piHole extends eqLogic {
 			$piHoleCmd = $this->getCmd(null, 'status');
 			$this->checkAndUpdateCmd($piHoleCmd, (($jsonpiHole['blocking']=='enabled')?1:0));
 			
-			if($data) {
-				$urlprinter = $proto.'://' . $ip . '/api/stats/summary';
-				$request_http = new com_http($urlprinter);
-				$request_http->setNoSslCheck(true);
-				if($sid) {$request_http->setHeader(["sid: $sid"]);}
-				$piHoleinfo=$request_http->exec(60,1);
-				log::add('piHole','debug',__('recu:', __FILE__).$piHoleinfo);
-				$jsonpiHole = json_decode($piHoleinfo,true);
-			}
+			$urlprinter = $proto.'://' . $ip . '/api/stats/summary';
+			$request_http = new com_http($urlprinter);
+			$request_http->setNoSslCheck(true);
+			if($sid) {$request_http->setHeader(["sid: $sid"]);}
+			$piHoleinfo=$request_http->exec(60,1);
+			log::add('piHole','debug',__('recu:', __FILE__).$piHoleinfo);
+			$jsonpiHole = json_decode($piHoleinfo,true);
 			
 			$summaryRaw = piHole::getStructure('summaryRaw');
 			foreach($summaryRaw as $id => $trad) {
@@ -191,9 +193,8 @@ class piHole extends eqLogic {
 				if (is_object($online)) {
 					$this->checkAndUpdateCmd($online, '0');
 				}
-			} else {
-				log::add('piHole','error',$e->getMessage());
 			}
+			log::add('piHole','error',$e->getMessage());
 		}
 	} 
 	
@@ -345,7 +346,7 @@ class piHole extends eqLogic {
 		$hasUpdateFTL->save();
 		
 		$order++;
-		$this->getpiHoleInfo(null,$order);
+		$this->getpiHoleInfo($order);
 	}
 }
 
