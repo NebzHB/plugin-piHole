@@ -99,6 +99,7 @@ class piHole extends eqLogic {
 	}
 	
 	public function getpiHoleInfo($data=null,$order=null) {
+		if(!$eqLogic->getIsEnable()) return;
 		try {
 			$proto = $this->getConfiguration('proto','http');
 			$ip = $this->getConfiguration('ip','');
