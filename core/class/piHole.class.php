@@ -66,27 +66,24 @@ class piHole extends eqLogic {
 			throw new Exception("Cannot find $urlAuth for checking authentication status");
 		}
 		$jsonpiHole = json_decode($piHoleAuth,true);
-		if(!$jsonpiHole['session']['valid'] || $this->getConfiguration('sid','') == '') {
+		if(!is_array($jsonpiHole) || !isset($jsonpiHole['session']['valid']) || !$jsonpiHole['session']['valid'] || $this->getConfiguration('sid','') == '') {
 			//get sid
-			$urlAuth = $proto.'://' . $ip . '/api/auth';
 			$request_http = new com_http($urlAuth);
 			$request_http->setNoSslCheck(true);
 			$request_http->setPost(json_encode(["password"=>$apikey]));
 			$piHoleAuth=$request_http->exec(60,1);
-			if($piHoleAuth) {
-				log::add('piHole','debug',"AUTH:".$piHoleAuth);
-				$jsonpiHole = json_decode($piHoleAuth,true);
-				if($jsonpiHole) {
-					$sid=urlencode($jsonpiHole['session']['sid']);
-					$this->setConfiguration('sid',$sid);
-					$this->save(true);
-					return $sid;
-				} else {
-					throw new Exception("JSON received from $urlAuth is invalid");
-				}
-			} else {
+			if(!$piHoleAuth) {
 				throw new Exception("Cannot find $urlAuth for authentication");
 			}
+			log::add('piHole','debug',"AUTH:".$piHoleAuth);
+			$jsonpiHole = json_decode($piHoleAuth,true);
+			if (!is_array($jsonpiHole) || !isset($jsonpiHole['session']['sid'])) {
+				throw new Exception("JSON received from $urlAuth is invalid");
+			}
+			$sid=urlencode($jsonpiHole['session']['sid']);
+			$this->setConfiguration('sid',$sid);
+			$this->save(true);
+			return $sid;
 		} elseif($jsonpiHole['session']['valid']){
 			$sid=$this->getConfiguration('sid','');
 			log::add('piHole','debug',"session valid taking sid from cache:".$sid);
