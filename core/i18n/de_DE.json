@@ -19,8 +19,7 @@
         "Update FTL Dispo": "Update FTL Dispo",
         "Update InterfaceWeb Dispo": "Update InterfaceWeb Dispo",
         "Update PiHole Dispo": "Update PiHole Verfügbar",
-        "piHole non joignable : ": "piHole nicht erreichbar :",
-        "recu version:": "recu version:"
+        "piHole non joignable : ": "piHole nicht erreichbar :"
     },
     "plugins\/piHole\/desktop\/js\/piHole.js": {
         "-Aucune Valeur-": "-Kein Wert-",
