@@ -34,9 +34,18 @@ commandes.
 -   **Objet parent** : indique l’objet parent auquel appartient
     l’équipement
 
--   **Ip du serveur** : l'ip du serveur en question
+-   **Ip du serveur** : l'ip du serveur en question (que l'ip ! pas de /admin ou rien derrière !!)
 
--   **Apikey** : clé api global ou d'un user défini dans pi-hole lui même (WEBPASSWORD dans /etc/pihole/setupVars.conf ou Settings > API > Show API token > QRCode avec votre mobile, copier) Depuis piHole v4 elle est visible en RAW sous le QRCode.
+-   **Apikey** : Dans Web interface/API (1), passez en mode Expert (2) puis cliquez sur "Configure app password".
+
+![fafa5f029e4d5195e950a002b4dc9026eec5de97_2_690x438](https://github.com/user-attachments/assets/c41587b1-b724-402b-8a8a-706b987b86bc)
+
+Copiez le mot de passe caché par des hachures et collez-le dans le champ Apikey du plugin.
+
+![664c387239146c073185b19e05edb534c122eaa2](https://github.com/user-attachments/assets/e7a52010-c1bb-4892-a935-aa73c913ceae)
+
+> IMPORTANT : N'oubliez pas de valider l'activation en cliquant sur "Enable new app password" !!!
+
 
 
 -   **Onglet Commandes** :
