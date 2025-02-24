@@ -16,14 +16,14 @@
 	"hasOwnDeamon": false,
 	"require": "3.3.24",
 	"category": "monitoring",
-	"issue": "https://github.com/NebzHB/plugin-piHole/issues",
-	"changelog": "https://nebzhb.github.io/plugin-piHole/fr_FR/changelog",
-	"changelog_beta": "https://nebzhb.github.io/plugin-piHole/fr_FR/changelog",
-	"documentation": "https://nebzhb.github.io/plugin-piHole/fr_FR/",
-	"documentation_beta": "https://nebzhb.github.io/plugin-piHole/fr_FR/",
-	"forum_link": "https://community.jeedom.com/tag/plugin-pihole",
+	"issue": "https://github.com/NebzHB/jeedom_docs/issues",
+	"changelog": "https://nebzhb.github.io/jeedom_docs/plugins/piHole/fr_FR/changelog",
+	"changelog_beta": "https://nebzhb.github.io/jeedom_docs/plugins/piHole/fr_FR/changelog",
+	"documentation": "https://nebzhb.github.io/jeedom_docs/plugins/piHole/fr_FR/",
+	"documentation_beta": "https://nebzhb.github.io/jeedom_docs/plugins/piHole/fr_FR/",
+	"forum_link": "https://community.jeedom.com/tags/plugin-pihole",
 	"link": {
-		"forum": "https://community.jeedom.com/tag/plugin-pihole"
+		"forum": "https://community.jeedom.com/tags/plugin-pihole"
 	},
 	"language": [
 		"de_DE",
