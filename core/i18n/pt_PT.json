@@ -20,10 +20,10 @@
         "Update InterfaceWeb Dispo": "Interface de actualizaçãoDispositivo Web",
         "Update PiHole Dispo": "Atualizar o PiHole Dispo",
         "piHole non joignable : ": "piHole inacessível :",
-        "recu version:": "versão recebida:",
-        "recu:": "recebido:"
+        "recu version:": "versão recebida:"
     },
     "plugins\/piHole\/desktop\/js\/piHole.js": {
+        "-Aucune Valeur-": "-Sem valor-",
         "Afficher": "Mostrar",
         "Historiser": "Histórico",
         "Icone": "Ícone",
@@ -57,11 +57,11 @@
         "Nom": "Nome",
         "Nom de l'équipement": "Nome do equipamento",
         "Objet parent": "Objeto pai",
-        "Options": "Opções",
         "Santé": "Estado",
         "Sauvegarder": "Guardar",
         "Supprimer": "Eliminar",
         "Tableau de commandes": "Painel de controlo",
+        "Valeurs": "Valores",
         "Visible": "Visível"
     }
 }

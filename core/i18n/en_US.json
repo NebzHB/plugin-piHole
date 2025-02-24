@@ -20,10 +20,10 @@
         "Update InterfaceWeb Dispo": "Web UI Update Avail",
         "Update PiHole Dispo": "piHole Update Avail",
         "piHole non joignable : ": "piHole not reachable :",
-        "recu version:": "received version:",
-        "recu:": "received:"
+        "recu version:": "received version:"
     },
     "plugins\/piHole\/desktop\/js\/piHole.js": {
+        "-Aucune Valeur-": "-No Value-",
         "Afficher": "Show",
         "Historiser": "Historize",
         "Icone": "Icon",
@@ -57,11 +57,11 @@
         "Nom": "Name",
         "Nom de l'équipement": "Equipment Name",
         "Objet parent": "Parent object",
-        "Options": "Options",
         "Santé": "Health",
         "Sauvegarder": "Save",
         "Supprimer": "Remove",
         "Tableau de commandes": "Commands Table",
+        "Valeurs": "Values",
         "Visible": "Visible"
     }
 }
