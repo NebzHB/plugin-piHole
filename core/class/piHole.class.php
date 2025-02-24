@@ -376,13 +376,14 @@ class piHoleCmd extends cmd {
 			return '';
 		}
 		$eqLogic = $this->getEqlogic();
-		$proto = $eqLogic->getConfiguration('proto','http');
-		$ip = $eqLogic->getConfiguration('ip','');
-		$apikey = $eqLogic->getConfiguration('apikey','');
-		$sid = $eqLogic->piHoleAuth($proto,$ip,$apikey);
 		$logical = $this->getLogicalId();
-		$result=null;
 		if ($logical != 'refresh'){
+			$proto = $eqLogic->getConfiguration('proto','http');
+			$ip = $eqLogic->getConfiguration('ip','');
+			$apikey = $eqLogic->getConfiguration('apikey','');
+			$sid = $eqLogic->piHoleAuth($proto,$ip,$apikey);
+			$result=null;
+		
 			switch ($logical) {
 				case 'disable':
 					$urlpiHole = $proto.'://' . $ip . '/api/dns/blocking';
