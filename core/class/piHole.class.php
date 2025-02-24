@@ -112,6 +112,7 @@ class piHole extends eqLogic {
 				$request_http->setNoSslCheck(true);
 				$request_http->setHeader(["sid: $sid"]);
 				$piHoleinfo=$request_http->exec(60,1);
+				log::add('piHole','debug',__('request:', __FILE__).$urlprinter.json_encode(["sid: $sid"]));
 			} else {
 				$piHoleinfo=$data;
 			}
