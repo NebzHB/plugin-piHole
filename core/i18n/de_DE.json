@@ -7,7 +7,6 @@
         "Domaines bloqués": "Gesperrte Domains",
         "Domaines uniques": "Einzigartige Bereiche",
         "Désactiver le filtrage": "Filterung deaktivieren",
-        "Expression cron non valide pour ": "Ungültiger Cron-Ausdruck für",
         "Online": "Online",
         "Pourcentage publicités bloquées aujourd'hui": "Prozentsatz der heute geblockten Werbung",
         "Publicités bloquées aujourd'hui": "Heute geblockte Werbung",
@@ -18,8 +17,7 @@
         "Statut": "Status",
         "Update FTL Dispo": "Update FTL Dispo",
         "Update InterfaceWeb Dispo": "Update InterfaceWeb Dispo",
-        "Update PiHole Dispo": "Update PiHole Verfügbar",
-        "piHole non joignable : ": "piHole nicht erreichbar :"
+        "Update PiHole Dispo": "Update PiHole Verfügbar"
     },
     "plugins\/piHole\/desktop\/js\/piHole.js": {
         "-Aucune Valeur-": "-Kein Wert-",
