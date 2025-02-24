@@ -162,7 +162,7 @@ class piHole extends eqLogic {
 			if($piHoleVer) {
 				$jsonpiHoleVer = json_decode($piHoleVer,true);
 				$piHoleCmd = $this->getCmd(null, 'hasUpdatePiHole');
-				$this->checkAndUpdateCmd($piHoleCmd, version_compare($jsonpiHoleVer['version']['core']['local']['version'],$jsonpiHoleVer['version']['core']['remote']['version'],"<")));
+				$this->checkAndUpdateCmd($piHoleCmd, version_compare($jsonpiHoleVer['version']['core']['local']['version'],$jsonpiHoleVer['version']['core']['remote']['version'],"<"));
 				$piHoleCmd = $this->getCmd(null, 'hasUpdateWebInterface');
 				$this->checkAndUpdateCmd($piHoleCmd, version_compare($jsonpiHoleVer['version']['web']['local']['version'],$jsonpiHoleVer['version']['web']['remote']['version'],"<"));
 				$piHoleCmd = $this->getCmd(null, 'hasUpdateFTL');
