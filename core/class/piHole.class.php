@@ -110,7 +110,7 @@ class piHole extends eqLogic {
 				$urlprinter = $proto.'://' . $ip . '/api/dns/blocking';
 				$request_http = new com_http($urlprinter);
 				$request_http->setNoSslCheck(true);
-				$request_http->setHeader(["sid: $sid"]);
+				if($sid) {$request_http->setHeader(["sid: $sid"]);}
 				$piHoleinfo=$request_http->exec(60,1);
 				log::add('piHole','debug',__('request:', __FILE__).$urlprinter.json_encode(["sid: $sid"]));
 			} else {
@@ -127,7 +127,7 @@ class piHole extends eqLogic {
 				$urlprinter = $proto.'://' . $ip . '/api/stats/summary';
 				$request_http = new com_http($urlprinter);
 				$request_http->setNoSslCheck(true);
-				$request_http->setHeader(["sid: $sid"]);
+				if($sid) {$request_http->setHeader(["sid: $sid"]);}
 				$piHoleinfo=$request_http->exec(60,1);
 				log::add('piHole','debug',__('recu:', __FILE__).$piHoleinfo);
 				$jsonpiHole = json_decode($piHoleinfo,true);
@@ -167,7 +167,7 @@ class piHole extends eqLogic {
 			$urlprinter = $proto.'://' . $ip . '/api/info/version';
 			$request_http = new com_http($urlprinter);
 			$request_http->setNoSslCheck(true);
-			$request_http->setHeader(["sid: $sid"]);
+			if($sid) {$request_http->setHeader(["sid: $sid"]);}
 			$piHoleVer=$request_http->exec(60,1);
 			log::add('piHole','debug',__('recu version:', __FILE__).$piHoleVer);
 			if($piHoleVer) {
@@ -385,10 +385,8 @@ class piHoleCmd extends cmd {
 			try{
 				$request_http = new com_http($urlpiHole);
 				$request_http->setNoSslCheck(true);
-				$request_http->setHeader(["sid: $sid"]);
-				if($action) {
-              				$request_http->setPost(json_encode($action));
-				}
+				if($sid) {$request_http->setHeader(["sid: $sid"]);}
+				if($action) {$request_http->setPost(json_encode($action));}
 				$result=$request_http->exec(60,1);
 				log::add('piHole','debug','Result cmd '.$urlpiHole.' :'.$result);
 				$online = $eqLogic->getCmd(null, 'online');
