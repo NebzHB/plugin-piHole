@@ -70,6 +70,7 @@ class piHole extends eqLogic {
 							"domains_being_blocked"=>["key"=>"domains_being_blocked","trad"=>__("Domaines bloqués", __FILE__)],
 							"gravity_last_updated"=>["key"=>"last_update","trad"=>__('Dernière mise à jour', __FILE__)]
 						]
+					];
 			break;
 		}		
 	}
