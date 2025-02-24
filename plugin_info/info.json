@@ -1,6 +1,6 @@
 {
 	"id": "piHole",
-	"name": "piHole",
+	"name": "piHole V6",
 	"description": {
 		"fr_FR": "Plugin permettant d'activer ou désactiver votre serveur pi-Hole V6. Un interrupteur pour le désactiver et quelques chiffres.",
 		"en_US": "Plugin to enable or disable your V6 pi-Hole server. A switch to disable it and some numbers.",
