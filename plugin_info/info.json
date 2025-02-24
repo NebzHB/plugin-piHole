@@ -16,7 +16,7 @@
 	"hasOwnDeamon": false,
 	"require": "3.3.24",
 	"category": "monitoring",
-	"issue": "https://github.com/NebzHB/jeedom_docs/issues",
+	"issue": "https://github.com/NebzHB/plugin-piHole/issues",
 	"changelog": "https://nebzhb.github.io/jeedom_docs/plugins/piHole/fr_FR/changelog",
 	"changelog_beta": "https://nebzhb.github.io/jeedom_docs/plugins/piHole/fr_FR/changelog",
 	"documentation": "https://nebzhb.github.io/jeedom_docs/plugins/piHole/fr_FR/",
