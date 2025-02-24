@@ -58,7 +58,7 @@ class piHole extends eqLogic {
 							"dns_queries_today"=>["key"=>"total","trad"=>__("Requêtes aujourd'hui", __FILE__)],
 							"ads_blocked_today"=>["key"=>"blocked","trad"=>__("Publicités bloquées aujourd'hui", __FILE__)],
 							"ads_percentage_today"=>["key"=>"percent_blocked","trad"=>__("Pourcentage publicités bloquées aujourd'hui", __FILE__)],
-							"unique_domains"=>["key"=>"unique_domains","trad"=>]__("Domaines uniques", __FILE__),
+							"unique_domains"=>["key"=>"unique_domains","trad"=>__("Domaines uniques", __FILE__)],
 							"queries_forwarded"=>["key"=>"forwarded","trad"=>__("Requêtes transmises", __FILE__)],
 							"queries_cached"=>["key"=>"cached","trad"=>__("Requêtes en cache", __FILE__)]
 						],
