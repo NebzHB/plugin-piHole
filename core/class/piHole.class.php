@@ -63,9 +63,10 @@ class piHole extends eqLogic {
 			$apikey = $this->getConfiguration('apikey','');
 				
 			if(!$data) {
-				$urlprinter = $proto.'://' . $ip . '/api/dns/blocking/?sid='.$apikey;
+				$urlprinter = $proto.'://' . $ip . '/api/dns/blocking';
 				$request_http = new com_http($urlprinter);
 				$request_http->setNoSslCheck(true);
+				$request_http->setHeader(["sid: $apikey"]);
 				$piHoleinfo=$request_http->exec(60,1);
 			} else {
 				$piHoleinfo=$data;
@@ -78,9 +79,10 @@ class piHole extends eqLogic {
 			$this->checkAndUpdateCmd($piHoleCmd, (($jsonpiHole['blocking']=='enabled')?1:0));
 			
 			if($data) {
-				$urlprinter = $proto.'://' . $ip . '/api/stats/summary/?sid='.$apikey;
+				$urlprinter = $proto.'://' . $ip . '/api/stats/summary';
 				$request_http = new com_http($urlprinter);
 				$request_http->setNoSslCheck(true);
+				$request_http->setHeader(["sid: $apikey"]);
 				$piHoleinfo=$request_http->exec(60,1);
 				log::add('piHole','debug',__('recu:', __FILE__).$piHoleinfo);
 				$jsonpiHole = json_decode($piHoleinfo,true);
@@ -321,18 +323,24 @@ class piHoleCmd extends cmd {
 		$result=null;
 		if ($logical != 'refresh'){
 			$urlpiHole = $proto.'://' . $ip . '/api/stats/summary';	
+			$action = null;
 			switch ($logical) {
 				case 'disable':
-                	$action = ["blocking"=>false,"timer"=>null];
+					$urlpiHole = $proto.'://' . $ip . '/api/dns/blocking';
+                			$action = ["blocking"=>false,"timer"=>null];
 				break;
 				case 'enable':
-                	$action = ["blocking"=>true,"timer"=>null];
+					$urlpiHole = $proto.'://' . $ip . '/api/dns/blocking';
+                			$action = ["blocking"=>true,"timer"=>null];
 				break;
 			}
 			try{
-				$request_http = new com_http($proto.'://' . $ip . '/api/dns/blocking/?&sid='.$apikey);
+				$request_http = new com_http($urlpiHole);
 				$request_http->setNoSslCheck(true);
-              	$request_http->setPost(json_encode($action));
+				$request_http->setHeader(["sid: $apikey"]);
+				if($action) {
+              				$request_http->setPost(json_encode($action));
+				}
 				$result=$request_http->exec(60,1);
 				log::add('piHole','debug','Result cmd '.$urlpiHole.' :'.$result);
 				$online = $eqLogic->getCmd(null, 'online');
