@@ -6,8 +6,8 @@
 		"en_US": "Plugin to enable or disable your V6 pi-Hole server. A switch to disable it and some numbers.",
 		"es_ES": "Plugin para activar o desactivar su servidor pi-Hole V6. Un interruptor para desactivarlo y algunos números.",
 		"de_DE": "Plugin zum Ein- und Ausschalten Ihres V6 pi-Hole-Servers. Ein Schalter zum Ausschalten und ein paar Zahlen, lassen Sie mich wissen.",
-		"it_IT": "Plugin per abilitare o disabilitare il vostro V6 server pi-Hole. Un interruttore per disabilitarlo e alcuni numeri.",
-		"pt_PT": "Plugin para ativar ou desativar o seu V6 servidor pi-Hole. Um interrutor para o desativar e alguns números."
+		"it_IT": "Plugin per abilitare o disabilitare il vostro server pi-Hole V6. Un interruttore per disabilitarlo e alcuni numeri.",
+		"pt_PT": "Plugin para ativar ou desativar o seu servidor pi-Hole V6. Um interrutor para o desativar e alguns números."
 	},
 	"utilization": "Récupérez l'app password dans votre pi-Hole V6:<br />Settings > Web Interface/API > Basic->Expert > Configure app password puis Copier le code hachuré et Enable app password<br />piHole V6 seulement, les anciennes versions ne sont plus compatibles.",
 	"licence": "AGPL",
