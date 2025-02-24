@@ -62,6 +62,7 @@ class piHole extends eqLogic {
 		$request_http = new com_http($urlAuth);
 		$request_http->setNoSslCheck(true);
 		$piHoleAuth=$request_http->exec(60,1);
+		log::add('piHole','debug',"CHECK AUTH:".$piHoleAuth);
 		if(!$piHoleAuth) {
 			throw new Exception("Cannot find $urlAuth for checking authentication status");
 		}
@@ -85,9 +86,14 @@ class piHole extends eqLogic {
 			$this->save(true);
 			return $sid;
 		} elseif($jsonpiHole['session']['valid']){
-			$sid=$this->getConfiguration('sid','');
-			log::add('piHole','debug',"session valid taking sid from cache:".$sid);
-			return $sid;
+			if($jsonpiHole['session']['sid']) {
+				$sid=$this->getConfiguration('sid','');
+				log::add('piHole','debug',"session valid taking sid from cache:".$sid);
+				return $sid;
+			} else {
+				$this->setConfiguration('sid','');
+				return $this->piHoleAuth($proto,$ip,$apikey);
+			}
 		}
 		
 	}
