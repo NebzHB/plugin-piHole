@@ -32,7 +32,7 @@ class piHole extends eqLogic {
 						$piHole->getpiHoleInfo();
 					}
 				} catch (Exception $exc) {
-					log::add('piHole', 'error', __('Expression cron non valide pour ', __FILE__) . $piHole->getHumanName() . ' : ' . $autorefresh);
+					log::add('piHole', 'error','Expression cron non valide pour ' . $piHole->getHumanName() . ' : ' . $autorefresh);
 				}
 			}
 		}
@@ -86,7 +86,7 @@ class piHole extends eqLogic {
 		$piHoleAuth=$request_http->exec(60,1);
 		log::add('piHole','debug',"CHECK AUTH:".$piHoleAuth);
 		if(!$piHoleAuth) {
-			throw new Exception("Cannot find $urlAuth for checking authentication status");
+			throw new Exception("Impossible de trouver $urlAuth pour la vérification du statut de l'authentification");
 		}
 		$jsonpiHole = json_decode($piHoleAuth,true);
 		if(is_array($jsonpiHole)) {
@@ -98,11 +98,11 @@ class piHole extends eqLogic {
 				$piHoleAuth=$request_http->exec(60,1);
 				log::add('piHole','debug',"AUTH:".$piHoleAuth." with ".json_encode(["password"=>$apikey]));
 				if(!$piHoleAuth) {
-					throw new Exception("Cannot find $urlAuth for authentication");
+					throw new Exception("Impossible de trouver $urlAuth pour l'authentification");
 				}
 				$jsonpiHole = json_decode($piHoleAuth,true);
 				if (!is_array($jsonpiHole) || !isset($jsonpiHole['session']['sid'])) {
-					throw new Exception("JSON received from $urlAuth is invalid");
+					throw new Exception("JSON reçu de $urlAuth est invalide");
 				}
 				log::add('piHole','debug',"AUTH OK SID:".$sid);
 				$sid=$jsonpiHole['session']['sid'];
@@ -414,7 +414,7 @@ class piHoleCmd extends cmd {
 						$eqLogic->checkAndUpdateCmd($online, '0');
 					}
 				}
-				log::add('piHole','debug',__('piHole non joignable : ', __FILE__).$e->getCode());
+				log::add('piHole','debug','piHole non joignable : '.$e->getCode());
 			}
 		}
 		$eqLogic->getpiHoleInfo();
