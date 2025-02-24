@@ -80,13 +80,19 @@ class piHole extends eqLogic {
 					$sid=urlencode($jsonpiHole['session']['sid']);
 					$this->setConfiguration('sid',$sid);
 					$this->save(true);
+					return $sid;
 				} else {
 					throw new Exception("JSON received from $urlAuth is invalid");
 				}
 			} else {
 				throw new Exception("Cannot find $urlAuth for authentication");
 			}
-		} 
+		} elseif($jsonpiHole['session']['valid']){
+			$sid=$this->getConfiguration('sid','');
+			log::add('piHole','debug',"session valid taking sid from cache:".$sid);
+			return $sid;
+		}
+		
 	}
 	
 	public function getpiHoleInfo($data=null,$order=null) {
