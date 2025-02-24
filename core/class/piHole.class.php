@@ -171,12 +171,13 @@ class piHole extends eqLogic {
 				}
 			}
 			
-			$urlprinter = $proto.'://' . $ip . '/api/info/version';
-			$request_http = new com_http($urlprinter);
+			$urlVersion = $proto.'://' . $ip . '/api/info/version';
+			$request_http = new com_http($urlVersion);
 			$request_http->setNoSslCheck(true);
 			if($sid) {$request_http->setHeader(["sid: $sid"]);}
 			$piHoleVer=$request_http->exec(60,1);
-			log::add('piHole','debug',__('recu version:', __FILE__).$piHoleVer);
+			log::add('piHole','debug',"Request Version: ".$urlVersion.' with header '.json_encode(["sid: $sid"]));
+			log::add('piHole','debug',"Response Version: ".$piHoleVer);
 			if($piHoleVer) {
 				$jsonpiHoleVer = json_decode($piHoleVer,true);
 				$piHoleCmd = $this->getCmd(null, 'hasUpdatePiHole');
@@ -382,7 +383,6 @@ class piHoleCmd extends cmd {
 		$logical = $this->getLogicalId();
 		$result=null;
 		if ($logical != 'refresh'){
-			
 			switch ($logical) {
 				case 'disable':
 					$urlpiHole = $proto.'://' . $ip . '/api/dns/blocking';
@@ -399,7 +399,8 @@ class piHoleCmd extends cmd {
 				if($sid) {$request_http->setHeader(["sid: $sid"]);}
 				if($action) {$request_http->setPost(json_encode($action));}
 				$result=$request_http->exec(60,1);
-				log::add('piHole','debug','Result cmd '.$urlpiHole.' :'.$result);
+				log::add('piHole','debug',"Request Cmd: ".$urlpiHole.' with header '.json_encode(["sid: $sid"]));
+				log::add('piHole','debug',"Response Cmd with ".json_encode($action)." : ".$result);
 				$online = $eqLogic->getCmd(null, 'online');
 				if (is_object($online)) {
 					$eqLogic->checkAndUpdateCmd($online, '1');
