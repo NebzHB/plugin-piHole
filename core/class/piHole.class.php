@@ -55,18 +55,52 @@ class piHole extends eqLogic {
 			break;
 		}		
 	}
+
+	public function piHoleAuth($proto,$ip,$apikey) {
+		// check auth
+		$urlAuth = $proto.'://' . $ip . '/api/auth';
+		$request_http = new com_http($urlAuth);
+		$request_http->setNoSslCheck(true);
+		$piHoleAuth=$request_http->exec(60,1);
+		if(!$piHoleAuth) {
+			throw new Exception("Cannot find $urlAuth for checking authentication status");
+		}
+		$jsonpiHole = json_decode($piHoleAuth,true);
+		if(!$jsonpiHole['session']['valid'] || $this->getConfiguration('sid','') == '') {
+			//get sid
+			$urlAuth = $proto.'://' . $ip . '/api/auth';
+			$request_http = new com_http($urlAuth);
+			$request_http->setNoSslCheck(true);
+			$request_http->setPost(json_encode(["password"=>$apikey]));
+			$piHoleAuth=$request_http->exec(60,1);
+			if($piHoleAuth) {
+				log::add('piHole','debug',"AUTH:".$piHoleAuth);
+				$jsonpiHole = json_decode($piHoleAuth,true);
+				if($jsonpiHole) {
+					$sid=urlencode($jsonpiHole['session']['sid']);
+					$this->setConfiguration('sid',$sid);
+					$this->save(true);
+				} else {
+					throw new Exception("JSON received from $urlAuth is invalid");
+				}
+			} else {
+				throw new Exception("Cannot find $urlAuth for authentication");
+			}
+		} 
+	}
 	
 	public function getpiHoleInfo($data=null,$order=null) {
 		try {
 			$proto = $this->getConfiguration('proto','http');
 			$ip = $this->getConfiguration('ip','');
 			$apikey = $this->getConfiguration('apikey','');
+			$sid = $this->piHoleAuth($proto,$ip,$apikey);
 				
 			if(!$data) {
 				$urlprinter = $proto.'://' . $ip . '/api/dns/blocking';
 				$request_http = new com_http($urlprinter);
 				$request_http->setNoSslCheck(true);
-				$request_http->setHeader(["sid: $apikey"]);
+				$request_http->setHeader(["sid: $sid"]);
 				$piHoleinfo=$request_http->exec(60,1);
 			} else {
 				$piHoleinfo=$data;
@@ -82,7 +116,7 @@ class piHole extends eqLogic {
 				$urlprinter = $proto.'://' . $ip . '/api/stats/summary';
 				$request_http = new com_http($urlprinter);
 				$request_http->setNoSslCheck(true);
-				$request_http->setHeader(["sid: $apikey"]);
+				$request_http->setHeader(["sid: $sid"]);
 				$piHoleinfo=$request_http->exec(60,1);
 				log::add('piHole','debug',__('recu:', __FILE__).$piHoleinfo);
 				$jsonpiHole = json_decode($piHoleinfo,true);
@@ -119,19 +153,20 @@ class piHole extends eqLogic {
 				$this->checkAndUpdateCmd($gravity_last_updated, $absolute);
 			}
 			
-			$urlprinter = $proto.'://' . $ip . '/api.php?versions';
+			$urlprinter = $proto.'://' . $ip . '/api/info/version';
 			$request_http = new com_http($urlprinter);
 			$request_http->setNoSslCheck(true);
-			//$piHoleVer=$request_http->exec(60,1);
+			$request_http->setHeader(["sid: $sid"]);
+			$piHoleVer=$request_http->exec(60,1);
 			log::add('piHole','debug',__('recu version:', __FILE__).$piHoleVer);
 			if($piHoleVer) {
 				$jsonpiHoleVer = json_decode($piHoleVer,true);
 				$piHoleCmd = $this->getCmd(null, 'hasUpdatePiHole');
-				$this->checkAndUpdateCmd($piHoleCmd, (($jsonpiHoleVer['core_update']===true)?1:0));
+				$this->checkAndUpdateCmd($piHoleCmd, version_compare($jsonpiHoleVer['version']['core']['local']['version'],$jsonpiHoleVer['version']['core']['remote']['version'],"<")));
 				$piHoleCmd = $this->getCmd(null, 'hasUpdateWebInterface');
-				$this->checkAndUpdateCmd($piHoleCmd, (($jsonpiHoleVer['web_update']===true)?1:0));
+				$this->checkAndUpdateCmd($piHoleCmd, version_compare($jsonpiHoleVer['version']['web']['local']['version'],$jsonpiHoleVer['version']['web']['remote']['version'],"<"));
 				$piHoleCmd = $this->getCmd(null, 'hasUpdateFTL');
-				$this->checkAndUpdateCmd($piHoleCmd, (($jsonpiHoleVer['FTL_update']===true)?1:0));
+				$this->checkAndUpdateCmd($piHoleCmd, version_compare($jsonpiHoleVer['version']['ftl']['local']['version'],$jsonpiHoleVer['version']['ftl']['remote']['version'],"<"));
 			}
 			
 			$online = $this->getCmd(null, 'online');
@@ -139,11 +174,13 @@ class piHole extends eqLogic {
 				$this->checkAndUpdateCmd($online, '1');
 			}
 		} catch (Exception $e) {
-			if($e->getCode() == "404") {
+			if((int) $e->getCode() === 404) {
 				$online = $this->getCmd(null, 'online');
 				if (is_object($online)) {
 					$this->checkAndUpdateCmd($online, '0');
 				}
+			} else {
+				log::add('piHole','error',$e->getMessage());
 			}
 		}
 	} 
@@ -319,11 +356,11 @@ class piHoleCmd extends cmd {
 		$proto = $eqLogic->getConfiguration('proto','http');
 		$ip = $eqLogic->getConfiguration('ip','');
 		$apikey = $eqLogic->getConfiguration('apikey','');
+		$sid = $eqLogic->piHoleAuth($proto,$ip,$apikey);
 		$logical = $this->getLogicalId();
 		$result=null;
 		if ($logical != 'refresh'){
-			$urlpiHole = $proto.'://' . $ip . '/api/stats/summary';	
-			$action = null;
+			
 			switch ($logical) {
 				case 'disable':
 					$urlpiHole = $proto.'://' . $ip . '/api/dns/blocking';
@@ -337,7 +374,7 @@ class piHoleCmd extends cmd {
 			try{
 				$request_http = new com_http($urlpiHole);
 				$request_http->setNoSslCheck(true);
-				$request_http->setHeader(["sid: $apikey"]);
+				$request_http->setHeader(["sid: $sid"]);
 				if($action) {
               				$request_http->setPost(json_encode($action));
 				}
@@ -358,7 +395,7 @@ class piHoleCmd extends cmd {
 				log::add('piHole','debug',__('piHole non joignable : ', __FILE__).$e->getCode());
 			}
 		}
-		$eqLogic->getpiHoleInfo($result);
+		$eqLogic->getpiHoleInfo();
 	}
 
 	/************************Getteur Setteur****************************/
