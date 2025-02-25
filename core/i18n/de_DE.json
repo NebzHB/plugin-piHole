@@ -7,7 +7,6 @@
         "Domaines bloqués": "Gesperrte Domains",
         "Domaines uniques": "Einzigartige Bereiche",
         "Désactiver le filtrage": "Filterung deaktivieren",
-        "Expression cron non valide pour ": "Ungültiger Cron-Ausdruck für",
         "Online": "Online",
         "Pourcentage publicités bloquées aujourd'hui": "Prozentsatz der heute geblockten Werbung",
         "Publicités bloquées aujourd'hui": "Heute geblockte Werbung",
@@ -18,12 +17,10 @@
         "Statut": "Status",
         "Update FTL Dispo": "Update FTL Dispo",
         "Update InterfaceWeb Dispo": "Update InterfaceWeb Dispo",
-        "Update PiHole Dispo": "Update PiHole Verfügbar",
-        "piHole non joignable : ": "piHole nicht erreichbar :",
-        "recu version:": "recu version:",
-        "recu:": "recu:"
+        "Update PiHole Dispo": "Update PiHole Verfügbar"
     },
     "plugins\/piHole\/desktop\/js\/piHole.js": {
+        "-Aucune Valeur-": "-Kein Wert-",
         "Afficher": "Anzeige",
         "Historiser": "Chronik",
         "Icone": "Ikone",
@@ -57,11 +54,11 @@
         "Nom": "Name",
         "Nom de l'équipement": "Name des Geräts",
         "Objet parent": "Übergeordnetes Objekt",
-        "Options": "Optionen",
         "Santé": "Gesundheit",
         "Sauvegarder": "Zu schützen",
         "Supprimer": "Entfernen",
         "Tableau de commandes": "Bestelltabelle",
+        "Valeurs": "Werte",
         "Visible": "Sichtbar"
     }
 }
